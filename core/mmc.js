@@ -2,7 +2,7 @@
 // @name              mmc
 // @namespace         https://soulsign.inu1255.cn/scripts/218
 // @updateURL         https://soulsign.inu1255.cn/script/Miao-Mico/mmc
-// @version           1.2.13
+// @version           1.2.14
 // @author            Miao-Mico
 // @expire            2000000
 // @domain            *.*
@@ -13,7 +13,7 @@
 (function () {
     const about = {
         author: "M-M", // 作者
-        version: "1.2.13", // 版本
+        version: "1.2.14", // 版本
         licence: "Apache-2.0 License", // 许可
         trademark: "❤️ mmc ❤️", // 标志
     }; // 关于
@@ -272,12 +272,12 @@
     }
 
     async function assert(site_config, param_config) {
-        async function assert_item_group(item_group, message, callback) {
+        async function assert_table(config_table, assert_table, message, alarm_table) {
             async function match_regulation(hook, regulation) {
                 let boolean_reg = false;
 
-                for (let index = 0; index < item_group.length; index++) {
-                    boolean_reg = await hook(item_group[index]);
+                for (let index = 0; index < config_table.length; index++) {
+                    boolean_reg = await hook(config_table[index]);
 
                     regulation.box.push(boolean_reg);
                     regulation.code = regulation.code + boolean_reg;
@@ -296,9 +296,9 @@
                         return !(match.regulation.undefined.box[index] + match.regulation.null.box[index]);
                     },
                     alarm: async function (table = []) {
-                        if (item_group.length <= match.regulation.undefined.code) {
+                        if (config_table.length <= match.regulation.undefined.code) {
                             await system_log(system, 1, `${message} 缺失`);
-                        } else if (item_group.length <= match.regulation.null.code) {
+                        } else if (config_table.length <= match.regulation.null.code) {
                             await system_log(system, 1, `${message} 为空`);
                         }
 
@@ -335,87 +335,79 @@
             await system_log("assert_item_group()", 0, {
                 message: message,
                 length: {
-                    item_group: item_group.length,
+                    item_group: config_table.length,
                     undefined: match.regulation.undefined.code,
                     null: match.regulation.null.code,
                 },
             });
 
-            /* 回调 */
-            await callback(match.operation);
+            await match.operation.alarm(alarm_table);
+
+            for (let idx = 0; idx < assert_table.length; idx++) {
+                eval(`asserts.${assert_table[idx]} = ${await match.operation.pass(idx)}`);
+            }
 
             await system_log("assert_item_group()", 0, {
-                item_group: item_group,
+                item_group: config_table,
                 message: message,
-                callback: callback,
             });
         } // 断言类型
 
         try {
-            /* 断言域名 */
-            await assert_item_group([site_config.domain, param_config.domain], "domain", async function (operation) {
-                await operation.alarm();
-
-                asserts.domain.site = await operation.pass(0);
-                asserts.domain.param = await operation.pass(1);
-            });
-
-            /* 断言路径 */
-            await assert_item_group(
+            await operate_table(
                 [
-                    site_config.path.log_in,
-                    site_config.path.sign_in,
-                    param_config.path_log_in,
-                    param_config.path_sign_in,
+                    {
+                        config: [site_config.domain, param_config.domain],
+                        assert: [`domain.site`, `domain.param`],
+                        message: "domain",
+                        alarm: [],
+                    },
+                    {
+                        config: [
+                            site_config.path.log_in,
+                            site_config.path.sign_in,
+                            param_config.path_log_in,
+                            param_config.path_sign_in,
+                        ],
+                        assert: [`path.site.log_in`, `path.site.sign_in`, `path.param.sign_in`, `path.param.sign_in`],
+                        message: "path",
+                        alarm: [
+                            { box: ["null.box[0]", "null.box[2]"], trigger: 1, message: `log_in 为空` },
+                            { box: ["null.box[1]", "null.box[3]"], trigger: 1, message: `sign_in 为空` },
+                        ],
+                    },
+                    {
+                        config: [
+                            site_config.keyword.online,
+                            site_config.keyword.signed,
+                            param_config.keyword_online,
+                            param_config.keyword_signed,
+                        ],
+                        assert: [
+                            `keyword.site.online`,
+                            `keyword.site.signed`,
+                            `keyword.param.online`,
+                            `keyword.param.signed`,
+                        ],
+                        message: "keyword",
+                        alarm: [{ box: ["null.box[0]", "null.box[2]"], trigger: 1, message: `online 为空` }],
+                    },
+                    {
+                        config: [
+                            site_config.hook.get_log_in,
+                            site_config.hook.post_sign_in,
+                            site_config.hook.notify_sign_in,
+                        ],
+                        assert: [`hook.get_log_in`, `hook.post_sign_in`, `hook.notify_sign_in`],
+                        message: "hook",
+                        alarm: [
+                            { box: ["null.box[0]"], trigger: 0, message: `get_log_in 为空` },
+                            { box: ["null.box[1]"], trigger: 0, message: `post_sign_in 为空` },
+                        ],
+                    },
                 ],
-                "path",
-                async function (operation) {
-                    await operation.alarm([
-                        { box: ["null.box[0]", "null.box[2]"], trigger: 1, message: `log_in 为空` },
-                        { box: ["null.box[1]", "null.box[3]"], trigger: 1, message: `sign_in 为空` },
-                    ]);
-
-                    asserts.path.site.log_in = await operation.pass(0);
-                    asserts.path.site.sign_in = await operation.pass(1);
-                    asserts.path.param.log_in = await operation.pass(2);
-                    asserts.path.param.sign_in = await operation.pass(3);
-                }
-            );
-
-            /* 断言关键字 */
-            await assert_item_group(
-                [
-                    site_config.keyword.online,
-                    site_config.keyword.signed,
-                    param_config.keyword_online,
-                    param_config.keyword_signed,
-                ],
-                "keyword",
-                async function (operation) {
-                    await operation.alarm([
-                        { box: ["null.box[0]", "null.box[2]"], trigger: 1, message: `online 为空` },
-                    ]);
-
-                    asserts.keyword.site.online = await operation.pass(0);
-                    asserts.keyword.site.signed = await operation.pass(1);
-                    asserts.keyword.param.online = await operation.pass(2);
-                    asserts.keyword.param.signed = await operation.pass(3);
-                }
-            );
-
-            /* 断言钩子 */
-            await assert_item_group(
-                [site_config.hook.get_log_in, site_config.hook.post_sign_in, site_config.hook.notify_sign_in],
-                "hook",
-                async function (operation) {
-                    await operation.alarm([
-                        { box: ["null.box[0]"], trigger: 0, message: `get_log_in 为空` },
-                        { box: ["null.box[1]"], trigger: 0, message: `post_sign_in 为空` },
-                    ]);
-
-                    asserts.hook.get_log_in = await operation.pass(0);
-                    asserts.hook.post_sign_in = await operation.pass(1);
-                    asserts.hook.notify_sign_in = await operation.pass(2);
+                async function (item) {
+                    await assert_table(item.config, item.assert, item.message, item.alarm);
                 }
             );
         } catch (exception) {
