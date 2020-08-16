@@ -1,0 +1,23 @@
+(8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)] (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)] (4) ['site', 'param', Array(8), Array(8)]
+ > arg0: (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)]
+ > arg1: (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)]
+ > arg2: (4) ['site', 'param', Array(8), Array(8)]
+
+{domain: {…}, keyword: {…}, path: {…}, hook: {…}}
+ > domain: {}
+ > hook: {get_log_in: {…}, post_sign_in: {…}, notify_sign_in: {…}}
+ > keyword: {online: {…}, signed: {…}}
+ > path: {log: {…}, sign: {…}}
+ > __proto__: Object
+
+{domain: {…}, keyword: {…}, path: {…}, hook: {…}}
+ > domain: {}
+ > hook: {get_log_in: {…}, post_sign_in: {…}, notify_sign_in: {…}}
+ > keyword: {online: {…}, signed: {…}}
+ > path: {log: {…}, sign: {…}}
+ > __proto__: Object
+
+{site: {…}, param: {…}}
+ > param: {domain: '.net', keyword: {…}, path: {…}, hook: {…}}
+ > site: {domain: '.com', keyword: {…}, path: {…}, hook: {…}}
+ > __proto__: Object
