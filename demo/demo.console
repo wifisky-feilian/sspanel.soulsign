@@ -1,23 +1,33 @@
-(8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)] (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)] (4) ['site', 'param', Array(8), Array(8)]
- > arg0: (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)]
- > arg1: (8) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3)]
- > arg2: (4) ['site', 'param', Array(8), Array(8)]
+(9) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3), Array(1)]
 
-{domain: {…}, keyword: {…}, path: {…}, hook: {…}}
- > domain: {}
- > hook: {get_log_in: {…}, post_sign_in: {…}, notify_sign_in: {…}}
- > keyword: {online: {…}, signed: {…}}
- > path: {log: {…}, sign: {…}}
- > __proto__: Object
+target: {layer_0: {…}, layer_1: {…}, layer_2: {…}}
+ > layer_0: {layer_0_0: {…}, layer_0_1: '0_1'}
+  > layer_0_0: {layer_0_0_0: '0_0_0', layer_0_0_1: {…}}
+   > layer_0_0_0: '0_0_0'
+   > layer_0_0_1: {}
+  > layer_0_1: '0_1'
+ > layer_1: {layer_1_0: '1_0', layer_1_1: '1_1'}
+ > layer_2: {}
 
-{domain: {…}, keyword: {…}, path: {…}, hook: {…}}
- > domain: {}
- > hook: {get_log_in: {…}, post_sign_in: {…}, notify_sign_in: {…}}
- > keyword: {online: {…}, signed: {…}}
- > path: {log: {…}, sign: {…}}
- > __proto__: Object
+value: (2) ['.com', '.net'] parent: undefined
+(4) [Array(1), Array(2), Array(2), Array(3)]
+configs: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
+ > arg1: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
+  > domain: (2) ['.com', '.net']
+  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
+  > keyword: {online: 1, signed: 2}
+  > path: {log: 3, sign: 4}
 
-{site: {…}, param: {…}}
- > param: {domain: '.net', keyword: {…}, path: {…}, hook: {…}}
- > site: {domain: '.com', keyword: {…}, path: {…}, hook: {…}}
- > __proto__: Object
+asserts: {domain: true, keyword: {…}, path: {…}, hook: {…}}
+arg1: {domain: true, keyword: {…}, path: {…}, hook: {…}}
+  > domain: true
+  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
+  > keyword: {online: 1, signed: 2}
+  > path: {log: 3, sign: 4}
+
+variables: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
+arg1: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
+  > domain: (2) ['.com', '.net']
+  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
+  > keyword: {online: 1, signed: 2}
+  > path: {log: 3, sign: 4}
