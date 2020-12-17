@@ -1,33 +1,46 @@
-(9) ['domain', 'keyword', 'path', 'hook', Array(0), Array(2), Array(2), Array(3), Array(1)]
-
-target: {layer_0: {…}, layer_1: {…}, layer_2: {…}}
- > layer_0: {layer_0_0: {…}, layer_0_1: '0_1'}
-  > layer_0_0: {layer_0_0_0: '0_0_0', layer_0_0_1: {…}}
-   > layer_0_0_0: '0_0_0'
-   > layer_0_0_1: {}
-  > layer_0_1: '0_1'
- > layer_1: {layer_1_0: '1_0', layer_1_1: '1_1'}
- > layer_2: {}
-
-value: (2) ['.com', '.net'] parent: undefined
-(4) [Array(1), Array(2), Array(2), Array(3)]
-configs: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
- > arg1: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
-  > domain: (2) ['.com', '.net']
-  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
-  > keyword: {online: 1, signed: 2}
-  > path: {log: 3, sign: 4}
-
-asserts: {domain: true, keyword: {…}, path: {…}, hook: {…}}
-arg1: {domain: true, keyword: {…}, path: {…}, hook: {…}}
-  > domain: true
-  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
-  > keyword: {online: 1, signed: 2}
-  > path: {log: 3, sign: 4}
-
-variables: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
-arg1: {domain: Array(2), keyword: {…}, path: {…}, hook: {…}}
-  > domain: (2) ['.com', '.net']
-  > hook: {get_log_in: 5, post_sign_in: 6, notify_sign_in: 7}
-  > keyword: {online: 1, signed: 2}
-  > path: {log: 3, sign: 4}
+ > {object: {…}, chain: chain}
+   > chain: chain {#input: {…}, #count: {…}, #list: Array(3), #save: {…}}
+   > object: {platform: ƒ, auth: Array(4), applet: {…}, site: Array(2)}
+     > applet: {global: Array(3), custom: Array(0)}
+     > custom: (0) []
+     > global: (3) [{…}, {…}, {…}]
+       > 0: {info: {…}, argument: {…}, dependence: null}
+         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
+         > dependence: null
+         > info: {name: 'sspanel.login', callback: ƒ}
+       > 1: {info: {…}, argument: {…}, dependence: null}
+         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
+         > dependence: null
+         > info: {name: 'sspanel.signin', callback: ƒ}
+       > 2: {info: {…}, argument: {…}, dependence: 0}
+         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
+         > dependence: 0
+         > info: {name: 'custom_applet', callback: ƒ}
+       > length: 3
+     > auth: (4) [ƒ, ƒ, ƒ, ƒ]
+       > 0: ƒ () {\r\n            return "this is browser";\r\n        }
+       > 1: ƒ () {\r\n            return "this is password";\r\n        }
+       > 2: ƒ () {\r\n            return "this is taken";\r\n        }
+       > 3: ƒ () {\r\n            return "this is cookie";\r\n        }
+       > length: 4
+     > platform: ƒ () {\r\n                return "this is chrome.soulsign";\r\n            }
+     > site: (2) [{…}, {…}]
+       > 0: {domain: 'http://localhost.com', save: {…}}
+         > domain: 'http://localhost.com'
+         > save: {source: Array(3), exception: Array(0)}
+           > exception: (0) []
+           > source: (3) ['this is sspanel.login(). login for http://localhost.com/login', 'this is sspanel.signin(). signin for http://localhost.com/signin', 'this is custom applet(). custom for http://localhost.com/applet']
+             > 0: 'this is sspanel.login(). login for http://localhost.com/login'
+             > 1: 'this is sspanel.signin(). signin for http://localhost.com/signin'
+             > 2: 'this is custom applet(). custom for http://localhost.com/applet'
+             > length: 3
+       > 1: {domain: 'http://localhost.net', save: {…}}
+         > domain: 'http://localhost.net'
+         > save: {source: Array(3), exception: Array(0)}
+           > exception: (0) []
+           > source: (3) ['this is sspanel.login(). login for http://localhost.net/login', 'this is sspanel.signin(). signin for http://localhost.net/signin', 'this is custom applet(). custom for http://localhost.net/applet']
+             > 0: 'this is sspanel.login(). login for http://localhost.net/login'
+             > 1: 'this is sspanel.signin(). signin for http://localhost.net/signin'
+             > 2: 'this is custom applet(). custom for http://localhost.net/applet'
+             > length: 3
+       > length: 2
