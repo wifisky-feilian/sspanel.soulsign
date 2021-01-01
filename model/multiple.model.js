@@ -52,17 +52,16 @@ function multiple() {
                 {
                     info: "sspanel.login",
                     argument: { path: ["login"], keyword: [], callback: {}, hook: {} },
-                    dependence: null,
                 },
                 {
                     info: "sspanel.signin",
                     argument: { path: ["signin"], keyword: [], callback: {}, hook: {} },
-                    dependence: null,
+                    dependence: "sspanel.login",
                 },
                 {
                     info: {
                         name: "custom_applet",
-                        callback: (argument, domain) => {
+                        callback: (source, argument, domain) => {
                             return `this is custom applet(). custom for ${domain}/${argument.path[0]}`;
                         },
                     },

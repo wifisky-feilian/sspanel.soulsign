@@ -31,10 +31,8 @@ function parser(pattern, value, filter, callback = (object) => {}) {
     callback(variable.object);
 } // 解析
 
-function depend(symbol) {} // 依赖
-
 const operate = {
-    single: function (site) {
+    single: function (site, start = 0, end) {
         share.control.object.access(["applet"], (property) => {
             variable.chain = new share.chain(property.get.global, { source: property.get.custom }); // 创建 applet 链表
 
@@ -43,10 +41,14 @@ const operate = {
             variable.chain.operate(
                 {
                     try: (packet) => {
-                        packet.result = packet.source.info.callback(packet.source.argument, ...packet.situation); // 执行小程序
+                        packet.result = packet.self.info.callback(
+                            packet.source,
+                            packet.self.argument,
+                            ...packet.situation
+                        ); // 执行小程序
                     },
                     catch: (packet) => {
-                        throw { info: packet.source.info, exception: packet.exception };
+                        throw { info: packet.self.info, exception: packet.exception };
                     },
                     succeed: (packet) => {
                         packet.tools.control.source.push(packet.result); // 存储执行结果
@@ -60,13 +62,13 @@ const operate = {
     },
     multiple: function (start = 0, end) {
         share.control.object.access(["site"], (property) => {
-            share.operate.table(property.get, (site, tools) => {
-                this.single(site);
+            share.operate.table(property.get, (site) => {
+                this.single(site, start, end);
             });
         });
     },
 };
 
-export { variable, parser, depend, operate };
+export { variable, parser, operate };
 
-export default { variable, parser, depend, operate };
+export default { variable, parser, operate };

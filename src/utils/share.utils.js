@@ -95,10 +95,10 @@ const verify = {
         path = convert.path(path); // 根据 "." 区分层级
 
         while (!!object) {
-            property = path.shift();
-
-            if (object.hasOwnProperty(property)) object = object[property];
-            else break;
+            if (object.hasOwnProperty((property = path[0]))) {
+                object = object[property];
+                path.shift();
+            } else break;
         }
 
         farthest(object, !path.length);
@@ -195,47 +195,116 @@ const control = {
 }; // 控制
 
 class chain {
-    #input = { persistent: [], dependent: {} };
+    #input = { persistent: [], dependent: {}, get_key: () => {} };
     #count = { persistent: 0, dependent: 0 };
-    #list = [];
+    #array = [];
+    #index = 0;
     #save = {};
 
-    constructor(persistent = [], dependent = { source: [], callback: () => {} }) {
-        this.#input.persistent = persistent;
-        this.#input.dependent = dependent;
+    #push(array) {
+        try {
+            array.forEach((item) => {
+                this.#array.push([this.#input.get_key(item), item]);
+            }); // 存储，易于转换为 map 的形式
+        } catch (exception) {
+            throw exception;
+        }
+    } // 添加 array 到 this.#array
+
+    #virtual(callback) {
+        this.#array = new Map(this.#array); // 转成 Map 类型
+
+        callback(this.#array); // 回调
+
+        this.#array = [...this.#array]; // 转回 array 类型
+    } // 虚拟 this.#array 为 map，可以使用 map 方式操作 this.#array
+
+    #depend(symbol = this.#index) {
+        let source = {};
+
+        switch (typeof symbol) {
+            case "string": // 字符串，即名字
+                this.#virtual((map) => {
+                    source = map.get(symbol);
+                });
+                break;
+            case "number": // 数字，即索引
+                source = this.#array[symbol];
+                break;
+            default:
+                break;
+        }
+
+        return source;
+    } // 依赖，默认依赖前一个
+
+    constructor(
+        persistent = [],
+        dependent = { source: [], callback: () => {} },
+        get_key = (item) => {
+            item.info.name;
+        }
+    ) {
+        this.#input = { persistent, dependent, get_key };
 
         if (persistent.length) {
             this.#count.persistent += persistent.length; // 计数
-            this.#list.push(...persistent); // 存储
+
+            this.#push(persistent); // 存储
         }
     }
 
-    command(command = []) {
-        this.#input.command = command;
+    command(source = []) {
+        this.#input.command = source;
+
+        this.#virtual((map) => {
+            operate.table(source, (item) => {
+                switch (item.command) {
+                    case "+": // 添加
+                        map[item.name] = item.object;
+                        break;
+                    case "-": // 删除
+                        map.delete(item.name);
+                        break;
+                    case "=": // 修改
+                        item.object(map[item.name]);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
     } // 输入命令
 
     apply(situation = []) {
-        if (this.#count.persistent + this.#count.dependent >= this.#list.length) {
-            this.#list.length = this.#count.persistent; // 仅保留持久化的
+        this.#array.size = this.#count.persistent; // 仅保留持久化的
 
-            if (this.#input.dependent.hasOwnProperty("callback")) {
-                let array = item.callback(this.#input.dependent.source, ...situation); // 回调
+        if (this.#input.dependent.hasOwnProperty("callback")) {
+            let array = this.#input.dependent.callback(this.#input.dependent.source, ...situation); // 回调
 
-                this.#list.push(...array);
-                this.#count.dependent = array.length;
-            } // 提供了获取的回调函数
+            this.#push(array); // 存储
+            this.#count.dependent = array.length;
+        } // 提供了获取的回调函数
 
-            if (this.#input.hasOwnProperty("command")) {
-                console.debug("Not ready yet.");
-            } // 有指令
-        }
+        if (this.#input.hasOwnProperty("command")) {
+            console.debug("Not ready yet.");
+        } // 有指令
     } // 根据 this.#input.config 配置 this.#list 和  this.#count
 
     operate(callback = { try: () => {}, catch: () => {}, succeed: () => {} }, situation = []) {
         this.#save = operate.table(
-            this.#list,
+            this.#array,
             (source, tools, callback, situation) => {
-                let packet = { source, tools, situation, result: {}, exception: {} }; // 回调包
+                let packet = {
+                    self: source[1],
+                    source: this.#depend(source[1].dependence),
+                    tools: { ...tools },
+                    situation,
+                    result: {},
+                    exception: {},
+                }; // 回调包
+
+                this.#index = tools.index; // 更新索引
 
                 try {
                     callback.try(packet); // 回调
@@ -247,6 +316,8 @@ class chain {
                 }
 
                 callback.succeed(packet); // 回调
+
+                packet.self.save = packet.save; // 保存结果
             },
             [callback, situation]
         );
