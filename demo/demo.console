@@ -1,3 +1,23 @@
+global filter
+platform filter
+
+global filter
+auth filter
+
+global filter
+applet filter
+
+global filter
+site filter
+
+this is sspanel.login(). login for http://localhost.com/login
+this is sspanel.signin(). signin for http://localhost.com/signin
+this is custom applet(). custom for http://localhost.com/applet
+
+this is sspanel.login(). login for http://localhost.net/login
+this is sspanel.signin(). signin for http://localhost.net/signin
+this is custom applet(). custom for http://localhost.net/applet
+
  > {object: {…}, chain: chain}
    > chain: chain {#input: {…}, #count: {…}, #list: Array(3), #save: {…}}
    > object: {platform: ƒ, auth: Array(4), applet: {…}, site: Array(2)}
@@ -44,3 +64,6 @@
              > 2: 'this is custom applet(). custom for http://localhost.net/applet'
              > length: 3
        > length: 2
+
+multiple.model end!
+demo end!

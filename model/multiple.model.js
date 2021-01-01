@@ -10,12 +10,11 @@
 
 "use strick";
 
-import line from "../src/parser/line.parser.js"; // line.parser
+import { share, line } from "../src/iott.js";
 
-import platform from "../src/parser/platform.parser.js"; // platform.parser
-import auth from "../src/parser/auth.parser.js"; // auth.parser
-import applet from "../src/parser/applet.parser.js"; // applet.parser
-import site from "../src/parser/site.parser.js"; // domain.parser
+// import share from "../src/utils/share.utils.js"; // share.utils
+
+// import line from "../src/parser/line.parser.js"; // line.parser
 
 const variable = {
     pattern: [
@@ -28,52 +27,60 @@ const variable = {
         [],
         [],
     ],
-    callback: (object) => {
-        platform.parser(object);
-        auth.parser(object);
-        applet.parser(object);
-        site.parser(object);
-    },
     filter: {
-        global: function () {
-            return { code: false };
-        },
-        custom: [],
+        global: [
+            function () {
+                console.log("global filter");
+                return { code: false };
+            },
+        ],
+        custom: [
+            [
+                function (source, error, argument) {
+                    console.log("platform filter");
+                    if (!share.verify.type(source, "string")) {
+                        return { code: true };
+                    }
+
+                    return { code: false };
+                },
+            ],
+            [
+                function (source, error, argument) {
+                    console.log("auth filter");
+                    if (!share.verify.type(source, "object.Array")) {
+                        return { code: true };
+                    }
+
+                    return { code: false };
+                },
+            ],
+            [
+                function (source, error, argument) {
+                    console.log("applet filter");
+                    if (!share.verify.type(source, "object.Array")) {
+                        return { code: true };
+                    }
+
+                    return { code: false };
+                },
+            ],
+            [
+                function (source, error, argument) {
+                    console.log("site filter");
+                    if (!share.verify.type(source, "object.Array")) {
+                        return { code: true };
+                    }
+
+                    return { code: false };
+                },
+            ],
+        ],
     },
 };
 
-function multiple() {
-    line.parser(
-        variable.pattern,
-        [
-            "chrome.soulsign", // 平台 ""
-            ["browser", "password", "taken", "cookie"], // 认证方式 [""]
-            [
-                {
-                    info: "sspanel.login",
-                    argument: { path: ["login"], keyword: [], callback: {}, hook: {} },
-                },
-                {
-                    info: "sspanel.signin",
-                    argument: { path: ["signin"], keyword: [], callback: {}, hook: {} },
-                    dependence: "sspanel.login",
-                },
-                {
-                    info: {
-                        name: "custom_applet",
-                        callback: (source, argument, domain) => {
-                            return `this is custom applet(). custom for ${domain}/${argument.path[0]}`;
-                        },
-                    },
-                    argument: { path: ["applet"], keyword: [], callback: {}, hook: {} },
-                    dependence: 0,
-                },
-            ], // 小程序 [{}]
-            ["http://localhost.com", { domain: "http://localhost.net" }], // 域名 [""]
-        ],
-        variable.filter,
-        variable.callback
-    );
+function multiple(value) {
+    line.parser(variable.pattern, value, variable.filter, variable.callback);
 
     line.operate.multiple();
 

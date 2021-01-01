@@ -18,6 +18,11 @@ import time from "./time.parser.js"; // time.parser
 
 import model from "./model.parser.js"; // model.parser
 
+import platform from "./platform.parser.js"; // platform.parser
+import auth from "./auth.parser.js"; // auth.parser
+import applet from "./applet.parser.js"; // applet.parser
+import site from "./site.parser.js"; // domain.parser
+
 const variable = {
     object: {}, // model 转化后的所有变量
     chain: null,
@@ -28,14 +33,26 @@ function parser(pattern, value, filter, callback = (object) => {}) {
 
     share.control.object.refer(variable.object); // 引用 variable.object 并控制它
 
+    share.control.object.access(["platform"], (property) => {
+        platform.parser(variable.object);
+    });
+    share.control.object.access(["auth"], (property) => {
+        auth.parser(variable.object);
+    });
+    share.control.object.access(["site"], (property) => {
+        site.parser(variable.object);
+    });
+    share.control.object.access(["applet"], (property) => {
+        applet.parser(variable.object);
+        variable.chain = new share.chain(property.get.global, { source: property.get.custom }); // 创建 applet 链表
+    });
+
     callback(variable.object);
 } // 解析
 
 const operate = {
-    single: function (site, start = 0, end) {
+    single: function (start = 0, end, site = variable.object.site[0]) {
         share.control.object.access(["applet"], (property) => {
-            variable.chain = new share.chain(property.get.global, { source: property.get.custom }); // 创建 applet 链表
-
             // variable.chain.command(site.custom.applet); // 输入命令
             variable.chain.apply(); // 应用命令和小程序
             variable.chain.operate(
@@ -63,7 +80,7 @@ const operate = {
     multiple: function (start = 0, end) {
         share.control.object.access(["site"], (property) => {
             share.operate.table(property.get, (site) => {
-                this.single(site, start, end);
+                this.single(start, end, site);
             });
         });
     },

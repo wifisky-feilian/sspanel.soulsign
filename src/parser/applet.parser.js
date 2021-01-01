@@ -16,10 +16,14 @@ const variable = {
     type: {
         sspanel: {
             login: function (source, argument, domain) {
-                return `this is sspanel.login(). login for ${domain}/${argument.path[0]}`;
+                let string = `this is sspanel.login(). login for ${domain}/${argument.path[0]}`;
+                console.log(string);
+                return string;
             },
             signin: function (source, argument, domain) {
-                return `this is sspanel.signin(). signin for ${domain}/${argument.path[0]}`;
+                let string = `this is sspanel.signin(). signin for ${domain}/${argument.path[0]}`;
+                console.log(string);
+                return string;
             },
         },
         discuz: {

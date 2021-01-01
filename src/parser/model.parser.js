@@ -83,7 +83,7 @@ function parser_model(
                     if (null !== variable.leaf.value && undefined !== variable.leaf.value) {
                         variable.leaf.value = accessor.filter(
                             variable.leaf.value,
-                            [variable.count.leaf, variable.nest.index],
+                            { path: variable.nest.path, index: variable.count.leaf },
                             [branch[name], variable.nest.path]
                         ); // 取过滤器，并过滤
                     } // 可取到 "value"

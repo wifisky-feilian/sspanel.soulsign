@@ -196,15 +196,23 @@ const control = {
 
 class chain {
     #input = { persistent: [], dependent: {}, get_key: () => {} };
-    #count = { persistent: 0, dependent: 0 };
-    #array = [];
-    #index = 0;
-    #save = {};
+    #count = { persistent: 0, dependent: 0 }; // 关于 #array 的计数
+    #array = []; // operate() 运行的表
+    #index = 0; // operate() 时，当前运行的索引
+    #save = {}; // operate() 的结果
 
     #push(array) {
         try {
-            array.forEach((item) => {
-                this.#array.push([this.#input.get_key(item), item]);
+            array.forEach((item, key) => {
+                try {
+                    if (!!this.#input.get_key) {
+                        key = this.#input.get_key(item);
+                    }
+                } catch (exception) {
+                    throw exception;
+                }
+
+                this.#array.push([key, item]);
             }); // 存储，易于转换为 map 的形式
         } catch (exception) {
             throw exception;
@@ -229,7 +237,7 @@ class chain {
                 });
                 break;
             case "number": // 数字，即索引
-                source = this.#array[symbol];
+                source = this.#array[symbol][1].save;
                 break;
             default:
                 break;
@@ -240,10 +248,11 @@ class chain {
 
     constructor(
         persistent = [],
-        dependent = { source: [], callback: () => {} },
-        get_key = (item) => {
-            item.info.name;
-        }
+        dependent = {
+            source: [],
+            callback: () => {},
+        },
+        get_key
     ) {
         this.#input = { persistent, dependent, get_key };
 
@@ -276,11 +285,11 @@ class chain {
         });
     } // 输入命令
 
-    apply(situation = []) {
+    apply(argument = []) {
         this.#array.size = this.#count.persistent; // 仅保留持久化的
 
         if (this.#input.dependent.hasOwnProperty("callback")) {
-            let array = this.#input.dependent.callback(this.#input.dependent.source, ...situation); // 回调
+            let array = this.#input.dependent.callback(this.#input.dependent.source, ...argument); // 回调
 
             this.#push(array); // 存储
             this.#count.dependent = array.length;
@@ -317,7 +326,7 @@ class chain {
 
                 callback.succeed(packet); // 回调
 
-                packet.self.save = packet.save; // 保存结果
+                packet.self.save = packet.result; // 保存结果
             },
             [callback, situation]
         );
@@ -325,7 +334,7 @@ class chain {
 
     save() {
         return this.#save;
-    } // 区出结果
+    } // 取出结果
 }
 
 export { operate, convert, verify, select, control, chain };

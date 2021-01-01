@@ -10,105 +10,80 @@
 
 "use strict";
 
-import { operate, select } from "../utils/share.utils.js"; // share.utils
+import { chain } from "../utils/share.utils.js"; // share.utils
 
 const variable = {
     input: null,
-    count: {
-        global: 0,
-        custom: 0,
-    }, // 计数器
     chain: [], // 过滤链
     save: {}, // 保存
 };
 
-const config = {
-    channel: function () {
-        if (variable.input.hasOwnProperty("custom")) {
-            return !!variable.input.custom;
-        }
-    },
-    global: function () {
-        variable.count.global = 0;
-        variable.chain.length = 0;
-
-        if (variable.input.hasOwnProperty("global")) {
-            variable.chain.push(variable.input.global); //  添加全局过滤器
-            variable.count.global = 1;
-        }
-    },
-    custom: function (access) {
-        variable.count.custom = 0;
-        variable.chain.length = variable.count.global; // 仅保留全局过滤器
-
-        if (variable.input.hasOwnProperty("custom") && variable.input.custom.length) {
-            let custom = variable.input.custom.access(variable.input.custom.source, access);
-
-            variable.count.custom = custom.length;
-            variable.chain.push(...custom); // 添加自定义过滤器
-        }
-    },
-};
-
-function filter_chain(source, error, argument) {
-    variable.save = operate.table(
-        variable.chain,
-        (filter, tools) => {
-            let result = {},
-                source = !tools.index ? tools.argument[0] : tools.control.source.slice(-1)[0].source; // 如果是第一个，使用 source，否则使用最后一次过滤的结果
-            try {
-                result = filter(source, ...argument); // 过滤
-
-                if (undefined === result) {
-                    tools.control.exception.push({
-                        message: `filter ${tools.index} doesn't return anything.`,
-                        exception: filter,
-                    }); // 储存异常
-                } else {
-                    if (!result.hasOwnProperty("source")) result.source = source; // 无 source 属性，添加为当前 source
-                    tools.control.source.push(result); // 储存资源
-                } // [{无返回值}, {有返回值}]
-            } catch (exception) {
-                tools.control.exception.push({
-                    message: `filter ${tools.index} catch exception.`,
-                    exception,
-                }); // 储存异常
-
-                result = { code: true };
-
-                throw exception;
-            } finally {
-                if (result.hasOwnProperty("code") && result.code) {
-                    tools.control.source.push({ source: error }); // 储存资源，指定错误时的值
-
-                    tools.control.abort(); // 退出
-                } // 遇到一个 code 为真的，退出过滤器链，且返回预算错误信息
-            }
-        },
-        [source]
-    ); // 链式过滤，并得到过滤过程及其结果
-
-    return variable.save.source.slice(-1)[0].source; // 返回过滤结果
-}
-
 function parser_filter(filter, error) {
-    variable.input = !!filter ? filter : {}; // 转存 filter
+    variable.input = !!filter ? filter : { global: [], custom: [] }; // 转存 filter
 
-    config.global(); // 配置全局过滤器
+    // variable.chain = new chain(variable.input.global, {
+    //     source: variable.input.custom,
+    //     callback: (source, index) => {
+    //         return source[index];
+    //     },
+    // }); // 创建 filter 链
 
-    return select.array(
-        [
-            function (source, access, argument) {
-                return filter_chain(source, error, argument);
-            }, // undefined
-            function (source, access, argument) {
-                config.custom(access[0]); // 配置自定义过滤器
+    return (source, location, situation) => {
+        // TODO: 为什么这个放外面就不行啊
+        variable.chain = new chain(variable.input.global, {
+            source: variable.input.custom,
+            callback: (source, index) => {
+                return source[index];
+            },
+        }); // 创建 filter 链
 
-                return filter_chain(source, error, argument);
-            }, // object.Array
-        ],
-        config.channel()
-    );
+        variable.chain.apply([location.index]); // 根据索引应用过滤器
+        variable.chain.operate(
+            {
+                try: (packet) => {
+                    if (!packet.tools.index) {
+                        packet.source = packet.situation[0];
+                    } // 如果第一个，使用传入的 source
+
+                    packet.result = packet.self(packet.source, ...packet.situation[0]); // 过滤
+
+                    if (undefined === packet.result) {
+                        packet.tools.control.exception.push({
+                            message: `filter ${packet.situation[1].index} doesn't return anything.`, // 信息
+                            exception: packet.self, // 过滤器
+                        }); // 储存异常
+                    } else {
+                        if (!packet.result.hasOwnProperty("source")) packet.result.source = packet.source; // 无 source 属性，添加为当前 source
+                        packet.tools.control.source.push(packet.result); // 储存资源
+                    } // [{无返回值}, {有返回值}]
+                },
+                catch: (packet) => {
+                    packet.tools.control.exception.push({
+                        message: `filter ${packet.tools.index} catch exception.`,
+                        exception: packet.exception,
+                    }); // 储存异常
+
+                    packet.result = { code: true };
+                },
+                succeed: (packet) => {
+                    if (packet.result.hasOwnProperty("code") && packet.result.code) {
+                        packet.tools.control.source.push({ source: error }); // 储存资源，指定错误时的值
+                        packet.tools.control.exception.push({
+                            message: `filter.custom[${packet.situation[1].index}] failed.`, // 信息
+                            exception: packet.result,
+                        }); // 储存异常
+
+                        packet.tools.control.abort(); // 退出
+                    } // 遇到一个 code 为真的，退出过滤器链，且返回预算错误信息
+
+                    packet.result = packet.result.source;
+                },
+            },
+            [source, location, situation]
+        );
+
+        return variable.chain.save().source.slice(-1)[0].source; // 返回过滤结果
+    };
 }
 
 export { variable, parser_filter };
