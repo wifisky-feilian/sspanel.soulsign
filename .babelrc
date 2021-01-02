@@ -1,0 +1,28 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "useBuiltIns": "usage",
+                "corejs": 3
+            }
+        ]
+    ],
+    "plugins": [
+        [
+            "@babel/plugin-transform-runtime",
+            {
+                "absoluteRuntime": false,
+                "corejs": 3,
+                "helpers": true,
+                "regenerator": true,
+                "useESModules": false,
+                "version": "^7.12.5"
+            }
+        ],
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-private-methods"
+    ]
+}
+
+// 78KB - npm i babel-loader @babel/core @babel/preset-env core-js @babel/runtime-corejs3 @babel/plugin-transform-runtime @babel/plugin-proposal-class-properties @babel/plugin-proposal-private-methods -D
