@@ -10,9 +10,11 @@
 
 "use strict";
 
-import { parser_pattern } from "./pattern.parser.js"; // pattern.parser
-import { parser_value } from "./value.parser.js"; // value.parser
-import { parser_filter } from "./filter.parser.js"; // filter.parser
+import log from "../utils/log.utils.js"; // log.utils
+
+import $pattern from "./pattern.parser.js"; // pattern.parser
+import $value from "./value.parser.js"; // value.parser
+import $filter from "./filter.parser.js"; // filter.parser
 
 const variable = {
     nest: {
@@ -39,11 +41,11 @@ function parser_model(
     let branch = object; // 回调时的当前所在分支节点
 
     let accessor = {
-        value: parser_value(value),
-        filter: parser_filter(filter, null),
+        value: $value.parser(value),
+        filter: $filter.parser(filter, null),
     };
 
-    parser_pattern(
+    $pattern.parser(
         pattern,
         {
             push: function (name, index) {
@@ -90,11 +92,21 @@ function parser_model(
                 } catch (exception) {
                     variable.leaf.value = null;
 
-                    throw exception;
-                } finally {
-                    branch[name] = variable.leaf.value; // 为键赋值
-                    variable.count.leaf++; // leaf 计数自增
+                    log.exception.record(
+                        2, // 错误
+                        { location: "pattern.parser.callback.leaf()", exception }
+                    );
                 }
+
+                branch[name] = variable.leaf.value; // 为键赋值
+                variable.count.leaf++; // leaf 计数自增
+
+                $filter.variable.save.exception.forEach((element) => {
+                    log.exception.record(element.errno, {
+                        location: "pattern.parser.callback.leaf()",
+                        detail: element,
+                    });
+                }); // 记录 filter 异常到 log.exception
             },
         }
     );
@@ -106,8 +118,8 @@ export default {
     variable,
     parser: parser_model,
     extend_parser: {
-        pattern: parser_pattern,
-        value: parser_value,
-        filter: parser_filter,
+        pattern: $pattern.parser,
+        value: $value.parser,
+        filter: $filter.parser,
     },
 };

@@ -10,6 +10,14 @@
 
 "use strict";
 
+const variable = {
+    enable: false, // 调试模式
+};
+
+function debug_enable(enable = true) {
+    variable.enable = enable;
+} // 开启 debug 模式
+
 function debug_call(call, argument) {
     let name_call = call.name || call.toString().match(/function\s*([^(]*)\(/)[1];
 
@@ -20,6 +28,6 @@ function debug_call(call, argument) {
     console.debug(`${name_call}() exit.`);
 }
 
-export { debug_call };
+export { variable, debug_enable, debug_call };
 
-export default {};
+export default { variable, enable: debug_enable };

@@ -10,7 +10,7 @@
 
 "use strick";
 
-import { share, line } from "../src/iott.js";
+import { share, line } from "../src/iott.js"; // iott
 
 // import share from "../src/utils/share.utils.js"; // share.utils
 
@@ -28,18 +28,15 @@ const variable = {
         [],
     ],
     filter: {
-        global: [
-            function () {
-                console.log("global filter");
-                return { code: false };
-            },
-        ],
         custom: [
             [
-                function (source, error, argument) {
+                function (source, situation) {
                     console.log("platform filter");
                     if (!share.verify.type(source, "string")) {
-                        return { code: true };
+                        return {
+                            code: true,
+                            message: `type of source (value.${situation.path.join(".")}) is not string`,
+                        };
                     }
 
                     return { code: false };

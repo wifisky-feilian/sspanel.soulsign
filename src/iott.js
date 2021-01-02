@@ -11,9 +11,11 @@
 "use strict";
 
 import share from "./utils/share.utils.js"; // share.utils
+import debug from "./debug.utils.js"; // debug.utils
+import log from "../utils/log.utils.js"; // log.utils
 
 import line from "./parser/line.parser.js"; // line.parser
 
-export { share, line };
+export { share, debug, log, line };
 
-export default { share, line };
+export default { share, debug, log, line };

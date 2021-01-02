@@ -13,11 +13,10 @@
 "use strict";
 
 import share from "../utils/share.utils.js"; // share.utils
-
-import time from "./time.parser.js"; // time.parser
+import log from "../utils/log.utils.js"; // log.utils
+import time from "../utils/time.utils.js"; // time.utils
 
 import model from "./model.parser.js"; // model.parser
-
 import platform from "./platform.parser.js"; // platform.parser
 import auth from "./auth.parser.js"; // auth.parser
 import applet from "./applet.parser.js"; // applet.parser
@@ -30,6 +29,8 @@ const variable = {
 
 function parser(pattern, value, filter, callback = (object) => {}) {
     model.parser(pattern, variable.object, value, filter); // 解析 pattern
+
+    log.debug.record("line.parser.model.parser() complete.");
 
     share.control.object.refer(variable.object); // 引用 variable.object 并控制它
 
@@ -47,7 +48,13 @@ function parser(pattern, value, filter, callback = (object) => {}) {
         variable.chain = new share.chain(property.get.global, { source: property.get.custom }); // 创建 applet 链表
     });
 
-    callback(variable.object);
+    log.debug.record("line.parser.control.access() complete.");
+
+    try {
+        callback(variable.object);
+    } catch (exception) {
+        log.exception.record(2, { location: "line.parser.argument.callback()", exception });
+    }
 } // 解析
 
 const operate = {
@@ -65,7 +72,13 @@ const operate = {
                         ); // 执行小程序
                     },
                     catch: (packet) => {
-                        throw { info: packet.self.info, exception: packet.exception };
+                        log.exception.record(
+                            2, // 错误
+                            {
+                                location: "line.operate.single.catch()",
+                                detail: { site: packet.self.info.site, exception: packet.exception },
+                            }
+                        ); // 异常日志
                     },
                     succeed: (packet) => {
                         packet.tools.control.source.push(packet.result); // 存储执行结果

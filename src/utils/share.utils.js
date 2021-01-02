@@ -205,7 +205,7 @@ class chain {
         try {
             array.forEach((item, key) => {
                 try {
-                    if (!!this.#input.get_key) {
+                    if (verify.type(this.#input.get_key, "function")) {
                         key = this.#input.get_key(item);
                     }
                 } catch (exception) {
@@ -217,6 +217,8 @@ class chain {
         } catch (exception) {
             throw exception;
         }
+
+        return array.length;
     } // 添加 array 到 this.#array
 
     #virtual(callback) {
@@ -250,7 +252,6 @@ class chain {
         persistent = [],
         dependent = {
             source: [],
-            callback: () => {},
         },
         get_key
     ) {
@@ -286,13 +287,12 @@ class chain {
     } // 输入命令
 
     apply(argument = []) {
-        this.#array.size = this.#count.persistent; // 仅保留持久化的
+        this.#array.length = this.#count.persistent; // 仅保留持久化的
 
         if (this.#input.dependent.hasOwnProperty("callback")) {
-            let array = this.#input.dependent.callback(this.#input.dependent.source, ...argument); // 回调
-
-            this.#push(array); // 存储
-            this.#count.dependent = array.length;
+            this.#count.dependent = this.#push(
+                this.#input.dependent.callback(this.#input.dependent.source, ...argument) // 回调，获取
+            ); // 存入链式数组
         } // 提供了获取的回调函数
 
         if (this.#input.hasOwnProperty("command")) {
@@ -313,7 +313,7 @@ class chain {
                     exception: {},
                 }; // 回调包
 
-                this.#index = tools.index; // 更新索引
+                this.#index = tools.index; // 更新索引，用于 this.#depend
 
                 try {
                     callback.try(packet); // 回调
@@ -326,10 +326,14 @@ class chain {
 
                 callback.succeed(packet); // 回调
 
-                packet.self.save = packet.result; // 保存结果
+                packet.self.save = packet.result; // 保存结果，用于 this.#depend
             },
             [callback, situation]
         );
+
+        this.#array.forEach((item) => {
+            delete item[1].save;
+        }); // 删除保存的结果
     } // 链式运行
 
     save() {
