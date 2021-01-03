@@ -57,47 +57,42 @@ function parser(pattern, value, filter, callback = (object) => {}) {
     }
 } // 解析
 
-const operate = {
-    single: function (start = 0, end, site = variable.object.site[0]) {
-        share.control.object.access(["applet"], (property) => {
-            // variable.chain.command(site.custom.applet); // 输入命令
-            variable.chain.apply(); // 应用命令和小程序
-            variable.chain.operate(
-                {
-                    try: (packet) => {
-                        packet.result = packet.self.info.callback(
-                            packet.source,
-                            packet.self.argument,
-                            ...packet.situation
-                        ); // 执行小程序
+function operate(start = 0, end) {
+    share.control.object.access(["site"], (property) => {
+        share.operate.table(property.get, (site) => {
+            share.control.object.access(["applet"], (property) => {
+                // variable.chain.command(site.custom.applet); // 输入命令
+                variable.chain.apply(); // 应用命令和小程序
+                variable.chain.operate(
+                    {
+                        try: (packet) => {
+                            packet.result = packet.self.info.callback(
+                                packet.source,
+                                packet.self.argument,
+                                ...packet.situation
+                            ); // 执行小程序
+                        },
+                        catch: (packet) => {
+                            log.exception.record(
+                                2, // 错误
+                                {
+                                    location: "line.operate.single.catch()",
+                                    detail: { site: packet.self.info.site, exception: packet.exception },
+                                }
+                            ); // 异常日志
+                        },
+                        succeed: (packet) => {
+                            packet.tools.control.source.push(packet.result); // 存储执行结果
+                        },
                     },
-                    catch: (packet) => {
-                        log.exception.record(
-                            2, // 错误
-                            {
-                                location: "line.operate.single.catch()",
-                                detail: { site: packet.self.info.site, exception: packet.exception },
-                            }
-                        ); // 异常日志
-                    },
-                    succeed: (packet) => {
-                        packet.tools.control.source.push(packet.result); // 存储执行结果
-                    },
-                },
-                [site.domain]
-            ); // 执行小程序
+                    [site.domain]
+                ); // 执行小程序
 
-            site.save = variable.chain.save(); // 保存到 site.save 下
-        }); // 获取 applet 变量
-    },
-    multiple: function (start = 0, end) {
-        share.control.object.access(["site"], (property) => {
-            share.operate.table(property.get, (site) => {
-                this.single(start, end, site);
-            });
-        });
-    },
-};
+                site.save = variable.chain.save(); // 保存到 site.save 下
+            }); // 获取 applet 变量
+        }); // 迭代 site
+    }); // 获取 site
+}
 
 export { variable, parser, operate };
 

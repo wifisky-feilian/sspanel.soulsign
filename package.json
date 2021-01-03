@@ -2,12 +2,11 @@
     "name": "iott",
     "version": "2.0.0",
     "description": "if online then that",
-    "main": "iott.js",
+    "main": "dist/iott.js",
     "directories": {
         "doc": "docs"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.config.js"
     },
     "repository": {

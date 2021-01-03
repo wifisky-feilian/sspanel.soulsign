@@ -5,6 +5,9 @@ module.exports = {
     output: {
         path: __dirname + "/dist/",
         filename: "iott.js",
+        library: "iott",
+        libraryTarget: "umd",
+        libraryExport: "default",
     },
     module: {
         rules: [

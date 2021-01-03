@@ -1,0 +1,63 @@
+/**
+ * [auth.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace auth.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [line.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace line.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ *
+ * @todo operate.wait - support wait for some time. eg.: tools.control.wait(time.ready(time));
+ */
+
+/**
+ * [log.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace log.utils
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [model.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace model.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [platform.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace platform.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [site.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace site.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ *
+ * @todo site.custom - 支持命令
+ */
