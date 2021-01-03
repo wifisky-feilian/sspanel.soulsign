@@ -1,8 +1,8 @@
-<div align="center">
-	<h1>iott - if online then that</h1>
-</div>
+# iott
 
-## 功能
+if online then that.
+
+## 情景
 
 ## 介绍
 
@@ -21,11 +21,16 @@
 
 ## 鸣谢
 
-所有给予灵感的人儿们
+所有给予灵感的人儿们，包括但不限于以下：
 
-## Soul Sign
+### mmc.js
+
+> 回首前世，畅想今生。
+
+- [soul sign scripts](https://soulsign.inu1255.cn) & [my scripts](https://soulsign.inu1255.cn/?uid=1178)
+
+### Soul Sign
 
 - [github](https://github.com/inu1255/soulsign-chrome)
 - [chrome extension](https://chrome.google.com/webstore/detail/%E9%AD%82%E7%AD%BE/llbielhggjekmfjikgkcaloghnibafdl?hl=zh-CN)
 - [firefox addon](https://addons.mozilla.org/zh-CN/firefox/addon/%E9%AD%82%E7%AD%BE)
-- [soul sign scripts](https://soulsign.inu1255.cn) & [my scripts](https://soulsign.inu1255.cn/?uid=1178)
