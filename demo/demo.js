@@ -18,22 +18,22 @@ const model = [
             {
                 info: {
                     name: "hello applet",
-                    callback: (source, argument, domain) => {
-                        let string = `this is a custom applet. custom for ${domain}/${argument.path[0]}`;
-                        console.log(string);
-                        return string;
+                    callback: (source, site, argument) => {
+                        let message = `this is a custom applet. custom for ${site.url}`;
+                        console.log(message);
+                        return { code: 0, data: source, message };
                     },
                 },
-                argument: { path: ["applet"], keyword: [], callback: {}, hook: {} },
+                argument: { path: ["hello"], keyword: [] },
             },
             {
                 info: "sspanel.login",
-                argument: { path: ["login"], keyword: [], callback: {}, hook: {} },
+                argument: { path: ["login"], keyword: [] },
             },
             {
                 info: "sspanel.signin",
-                argument: { path: ["signin"], keyword: [], callback: {}, hook: {} },
-                dependence: "sspanel.login",
+                argument: { path: ["signin"], keyword: [] },
+                dependence: "hello applet",
             },
         ], // 小程序 [{}]
         ["http://localhost.com", { domain: "http://localhost.net" }], // 域名 [""]

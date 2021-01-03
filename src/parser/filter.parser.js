@@ -10,7 +10,7 @@
 
 "use strict";
 
-import { chain } from "../utils/share.utils.js"; // share.utils
+import chain from "../utils/chain.utils.js"; // chain.utils
 
 import log from "../utils/log.utils.js"; // log.utils
 

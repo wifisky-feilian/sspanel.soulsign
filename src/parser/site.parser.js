@@ -6,8 +6,11 @@
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu
  * @license Apache License 2.0
- *
- * @todo site.custom - 支持命令
+ */
+
+/**
+ * @todo site.domain - support correct automatically
+ * @todo site.custom - support command
  */
 
 "use strict";
