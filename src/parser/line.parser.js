@@ -17,6 +17,7 @@
 import share from "../utils/share.utils.js"; // share.utils
 import log from "../utils/log.utils.js"; // log.utils
 import time from "../utils/time.utils.js"; // time.utils
+import probe from "../utils/probe.utils.js"; // probe.utils
 
 import model from "./model.parser.js"; // model.parser
 import platform from "./platform.parser.js"; // platform.parser
@@ -26,6 +27,7 @@ import site from "./site.parser.js"; // domain.parser
 
 const variable = {
     object: {}, // model 转化后的所有变量
+    probe: null,
 };
 
 function parser(pattern, value, filter, callback = (object) => {}) {
@@ -33,18 +35,18 @@ function parser(pattern, value, filter, callback = (object) => {}) {
 
     log.debug.record("line.parser.model.parser() complete.");
 
-    share.control.object.refer(variable.object); // 引用 variable.object 并控制它
+    variable.probe = new probe(variable.object); // 创建 variable.object 探针
 
-    share.control.object.access(["platform"], (property) => {
+    variable.probe.access(["platform"], (property) => {
         platform.parser(variable.object);
     });
-    share.control.object.access(["auth"], (property) => {
+    variable.probe.access(["auth"], (property) => {
         auth.parser(variable.object);
     });
-    share.control.object.access(["site"], (property) => {
+    variable.probe.access(["site"], (property) => {
         site.parser(variable.object);
     });
-    share.control.object.access(["applet"], (property) => {
+    variable.probe.access(["applet"], (property) => {
         applet.parser(variable.object);
     });
 
@@ -58,9 +60,11 @@ function parser(pattern, value, filter, callback = (object) => {}) {
 } // 解析
 
 function operate(start = 0, end) {
-    share.control.object.access(["site"], (property) => {
-        share.operate.table(property.get, (site) => {
-            applet.operate(start, end, site); // 运行 applet
+    variable.probe.access(["site"], (site) => {
+        share.operate.table(site.get, (site) => {
+            variable.probe.access(["auth"], (auth) => {
+                applet.operate(start, end, site, auth.get); // 运行 applet
+            }); // 获取 auth
         }); // 迭代 site
     }); // 获取 site
 }

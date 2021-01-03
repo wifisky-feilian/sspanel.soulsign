@@ -58,10 +58,11 @@ const variable = {
 
 const debug = {
     __zone__: "debug",
-    record(message) {
+    record(message, callback = () => {}) {
         if ($debug.variable.enable) {
             variable.method.record(this.__zone__, message, undefined, (message) => {
                 console.debug(message);
+                callback();
             });
         }
     },

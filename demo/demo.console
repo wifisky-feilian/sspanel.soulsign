@@ -3,26 +3,19 @@ auth filter
 applet filter
 site filter
 
-this is alpha applet. custom for http://localhost.com/alpha
-this is beta applet. custom for http://localhost.com/beta
-this is sspanel.login(). login for http://localhost.com/login
-this is sspanel.signin(). signin for http://localhost.com/signin
-this is alpha applet. custom for http://localhost.net/alpha
-this is beta applet. custom for http://localhost.net/beta
-this is sspanel.login(). login for http://localhost.net/login
-this is sspanel.signin(). signin for http://localhost.net/signin
+{code: false, message: 'browser auth, for "http://localhost.com", passed', data: 'this is browser auth'}
+{code: false, message: 'taken auth, for "http://localhost.net", passed', data: 'this is taken auth, your taken is "!@#$%^&*()_+"'}
 
 {
-    auth: [null],
+    auth: {},
     applet: {
         global: [
-            { info: { name: "alpha applet" }, argument: { path: ["alpha"], keyword: [] } },
-            { info: { name: "beta applet" }, argument: { path: ["beta"], keyword: [] } },
-            { info: { name: "sspanel.login" }, argument: { path: ["login"], keyword: [] }, dependence: 0 },
+            { info: { name: "sspanel.login" }, auth: true, argument: { path: ["auth/login"], keyword: [] } },
             {
                 info: { name: "sspanel.signin" },
-                argument: { path: ["signin"], keyword: [] },
-                dependence: "beta applet",
+                argument: { path: ["user/checkin"], keyword: [] },
+                dependence: "sspanel.login",
+                auth: false,
             },
         ],
         custom: [],
@@ -30,66 +23,22 @@ this is sspanel.signin(). signin for http://localhost.net/signin
     site: [
         {
             domain: "http://localhost.com",
+            credential: [{ type: "browser" }],
             save: {
                 source: [
-                    {
-                        code: 0,
-                        data: { IM: { send: "Hi, would you go out playing tomorrow?" } },
-                        message: "this is alpha applet. custom for http://localhost.com/alpha",
-                    },
-                    {
-                        code: 0,
-                        data: {
-                            IM: {
-                                recv: "Hi, would you go out playing tomorrow?",
-                                send: "WOW! Let's go playing tomorrow with alpha.",
-                            },
-                        },
-                        message: "this is beta applet. custom for http://localhost.com/beta",
-                    },
-                    {
-                        code: 0,
-                        data: { IM: { recv: "Hi, would you go out playing tomorrow?" } },
-                        message: "this is sspanel.login(). login for http://localhost.com/login",
-                    },
-                    {
-                        code: 0,
-                        data: { IM: { recv: "WOW! Let's go playing tomorrow with alpha." } },
-                        message: "this is sspanel.signin(). signin for http://localhost.com/signin",
-                    },
+                    { code: 0, data: "axios.get(site.url)", message: "login" },
+                    { code: 0, data: "axios.post(site.url)", message: "signin" },
                 ],
                 exception: [],
             },
         },
         {
             domain: "http://localhost.net",
+            credential: [{ type: "taken", source: "!@#$%^&*()_+" }],
             save: {
                 source: [
-                    {
-                        code: 0,
-                        data: { IM: { send: "Hi, would you go out playing tomorrow?" } },
-                        message: "this is alpha applet. custom for http://localhost.net/alpha",
-                    },
-                    {
-                        code: 0,
-                        data: {
-                            IM: {
-                                recv: "Hi, would you go out playing tomorrow?",
-                                send: "WOW! Let's go playing tomorrow with alpha.",
-                            },
-                        },
-                        message: "this is beta applet. custom for http://localhost.net/beta",
-                    },
-                    {
-                        code: 0,
-                        data: { IM: { recv: "Hi, would you go out playing tomorrow?" } },
-                        message: "this is sspanel.login(). login for http://localhost.net/login",
-                    },
-                    {
-                        code: 0,
-                        data: { IM: { recv: "WOW! Let's go playing tomorrow with alpha." } },
-                        message: "this is sspanel.signin(). signin for http://localhost.net/signin",
-                    },
+                    { code: 0, data: "axios.get(site.url)", message: "login" },
+                    { code: 0, data: "axios.post(site.url)", message: "signin" },
                 ],
                 exception: [],
             },

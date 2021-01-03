@@ -31,6 +31,7 @@ function parser_site(object) {
         switch (typeof site) {
             case "string": // 字符串类型，即已提供类型
                 site = tools.table[tools.index] = { domain: site };
+                if (!site.hasOwnProperty("credential")) site.credential = [{ type: "browser" }];
                 break;
             case "object": // 对象类型，即用户自定义类型
                 if (site.hasOwnProperty("custom")) {

@@ -9,9 +9,9 @@
  */
 
 /**
- * [auth.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [chain.utils]{@link https://github.com/miiwu/sspanel.soulsign}
  *
- * @namespace auth.parser
+ * @namespace chain.utils
  * @version 2.0.0
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu
@@ -69,9 +69,29 @@
  */
 
 /**
+ * [probe.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace probe.utils
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
  * [site.parser]{@link https://github.com/miiwu/sspanel.soulsign}
  *
  * @namespace site.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [value.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ *
+ * @namespace value.parser
  * @version 2.0.0
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu

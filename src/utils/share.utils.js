@@ -148,54 +148,6 @@ const select = {
     }, // 选出相同的最远的索引
 }; // 选择
 
-const control = {
-    object: {
-        source: null, // 操作对象
-        chain: {
-            path: [], // 路径
-            source: [], // 变量
-        }, // 上次的链路
-        property: {
-            name: "", // 属性名字
-            parent: {}, // 属性的父节点
-            set set(value) {
-                this.parent[this.name] = value;
-            },
-            get get() {
-                return this.parent[this.name];
-            },
-        }, // 'paths' 指定的属性
-        refer: function (source) {
-            this.source = source;
-            this.chain.path.push("source");
-            this.chain.source.push(source);
-        }, //引用
-        exist: function (path, existing = (property) => {}) {
-            let index = select.farthest(path, this.chain); // 获取最远属性
+export { operate, convert, verify, select };
 
-            if (index < path.length) {
-                let object = this.chain.source.slice(-1)[0]; // 获取最后一个元素
-
-                for (const property of path.slice(index)) {
-                    if (!(object = object[property])) return false; // 如果属性不存在，退出
-                    this.chain.source.push(object); // 压入当前属性
-                } // 根据路径，查找属性
-
-                this.property.name = this.chain.path.slice(-1)[0]; // 获取属性名
-                this.property.parent = this.chain.source.slice(-2)[0]; // 获取父元素
-            } // 与上次路径不重叠
-
-            existing(this.property); // 回调
-
-            return true;
-        }, // 判断是否存在
-        access: function (paths, callback = (property) => {}) {
-            if (!this.exist(paths, callback)) return undefined;
-            else return this.property.get;
-        }, // 获取属性
-    }, // 变量
-}; // 控制
-
-export { operate, convert, verify, select, control };
-
-export default { operate, convert, verify, select, control };
+export default { operate, convert, verify, select };

@@ -1,5 +1,7 @@
 import iott from "../src/iott.js"; // iott
 
+import source from "../src/parser/source.parser.js"; // source.parser
+
 const model = [
     [
         "platform", // 平台
@@ -13,50 +15,49 @@ const model = [
     ], // pattern
     [
         "chrome.soulsign", // 平台 ""
-        ["browser"], // 认证方式 [""]
+        ["browser", "taken"], // 认证方式 [""]
         [
             {
                 info: {
-                    name: "alpha applet",
-                    callback: (source, site, argument) => {
-                        let message = `this is alpha applet. custom for ${site.url}`;
-                        console.log(message);
-                        return {
-                            code: 0,
-                            data: { IM: { recv: source, send: "Hi, would you go out playing tomorrow?" } },
-                            message,
-                        };
+                    name: "sspanel.login",
+                    callback: function (source, site, argument) {
+                        console.log(site.auth);
+
+                        return { code: 0, data: "axios.get(site.url)", message: "login" };
+
+                        /*
+                         
+                        return { code: 0, data: axios.get(site.url.get) };
+
+                        */
                     },
-                },
-                argument: { path: ["alpha"], keyword: [] },
+                }, // applet 信息
+                auth: true, // applet 认证
+                argument: { path: ["auth/login"], keyword: [] }, // applet 参数
             },
             {
                 info: {
-                    name: "beta applet",
-                    callback: (source, site, argument) => {
-                        let message = `this is beta applet. custom for ${site.url}`;
-                        console.log(message);
-                        return {
-                            code: 0,
-                            data: { IM: { recv: source, send: "WOW! Let's go playing tomorrow with alpha." } },
-                            message,
-                        };
+                    name: "sspanel.signin",
+                    callback: function (source, site, argument) {
+                        return { code: 0, data: "axios.post(site.url)", message: "signin" };
+
+                        /*
+                         
+                        let data = axios.post(site.url.post);
+
+                        return { code: 0, data: data.data.msg };
+
+                        */
                     },
                 },
-                argument: { path: ["beta"], keyword: [] },
-            },
-            {
-                info: "sspanel.login",
-                argument: { path: ["login"], keyword: [] },
-                dependence: 0,
-            },
-            {
-                info: "sspanel.signin",
-                argument: { path: ["signin"], keyword: [] },
-                dependence: "beta applet",
+                argument: { path: ["user/checkin"], keyword: [] },
+                dependence: "sspanel.login", // applet 依赖
             },
         ], // 小程序 [{}]
-        ["http://localhost.com", { domain: "http://localhost.net" }], // 域名 [""]
+        [
+            "http://localhost.com",
+            { domain: "http://localhost.net", credential: [{ type: "taken", source: "!@#$%^&*()_+" }] },
+        ], // 域名 [""]
     ], // value
     {
         custom: [
