@@ -1,69 +1,100 @@
-global filter
 platform filter
-
-global filter
 auth filter
-
-global filter
 applet filter
-
-global filter
 site filter
 
+this is alpha applet. custom for http://localhost.com/alpha
+this is beta applet. custom for http://localhost.com/beta
 this is sspanel.login(). login for http://localhost.com/login
 this is sspanel.signin(). signin for http://localhost.com/signin
-this is custom applet(). custom for http://localhost.com/applet
-
+this is alpha applet. custom for http://localhost.net/alpha
+this is beta applet. custom for http://localhost.net/beta
 this is sspanel.login(). login for http://localhost.net/login
 this is sspanel.signin(). signin for http://localhost.net/signin
-this is custom applet(). custom for http://localhost.net/applet
 
- > {object: {…}, chain: chain}
-   > chain: chain {#input: {…}, #count: {…}, #list: Array(3), #save: {…}}
-   > object: {platform: ƒ, auth: Array(4), applet: {…}, site: Array(2)}
-     > applet: {global: Array(3), custom: Array(0)}
-     > custom: (0) []
-     > global: (3) [{…}, {…}, {…}]
-       > 0: {info: {…}, argument: {…}, dependence: null}
-         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
-         > dependence: null
-         > info: {name: 'sspanel.login', callback: ƒ}
-       > 1: {info: {…}, argument: {…}, dependence: null}
-         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
-         > dependence: null
-         > info: {name: 'sspanel.signin', callback: ƒ}
-       > 2: {info: {…}, argument: {…}, dependence: 0}
-         > argument: {path: Array(1), keyword: Array(0), callback: {…}, hook: {…}}
-         > dependence: 0
-         > info: {name: 'custom_applet', callback: ƒ}
-       > length: 3
-     > auth: (4) [ƒ, ƒ, ƒ, ƒ]
-       > 0: ƒ () {\r\n            return "this is browser";\r\n        }
-       > 1: ƒ () {\r\n            return "this is password";\r\n        }
-       > 2: ƒ () {\r\n            return "this is taken";\r\n        }
-       > 3: ƒ () {\r\n            return "this is cookie";\r\n        }
-       > length: 4
-     > platform: ƒ () {\r\n                return "this is chrome.soulsign";\r\n            }
-     > site: (2) [{…}, {…}]
-       > 0: {domain: 'http://localhost.com', save: {…}}
-         > domain: 'http://localhost.com'
-         > save: {source: Array(3), exception: Array(0)}
-           > exception: (0) []
-           > source: (3) ['this is sspanel.login(). login for http://localhost.com/login', 'this is sspanel.signin(). signin for http://localhost.com/signin', 'this is custom applet(). custom for http://localhost.com/applet']
-             > 0: 'this is sspanel.login(). login for http://localhost.com/login'
-             > 1: 'this is sspanel.signin(). signin for http://localhost.com/signin'
-             > 2: 'this is custom applet(). custom for http://localhost.com/applet'
-             > length: 3
-       > 1: {domain: 'http://localhost.net', save: {…}}
-         > domain: 'http://localhost.net'
-         > save: {source: Array(3), exception: Array(0)}
-           > exception: (0) []
-           > source: (3) ['this is sspanel.login(). login for http://localhost.net/login', 'this is sspanel.signin(). signin for http://localhost.net/signin', 'this is custom applet(). custom for http://localhost.net/applet']
-             > 0: 'this is sspanel.login(). login for http://localhost.net/login'
-             > 1: 'this is sspanel.signin(). signin for http://localhost.net/signin'
-             > 2: 'this is custom applet(). custom for http://localhost.net/applet'
-             > length: 3
-       > length: 2
+{
+    auth: [null],
+    applet: {
+        global: [
+            { info: { name: "alpha applet" }, argument: { path: ["alpha"], keyword: [] } },
+            { info: { name: "beta applet" }, argument: { path: ["beta"], keyword: [] } },
+            { info: { name: "sspanel.login" }, argument: { path: ["login"], keyword: [] }, dependence: 0 },
+            {
+                info: { name: "sspanel.signin" },
+                argument: { path: ["signin"], keyword: [] },
+                dependence: "beta applet",
+            },
+        ],
+        custom: [],
+    },
+    site: [
+        {
+            domain: "http://localhost.com",
+            save: {
+                source: [
+                    {
+                        code: 0,
+                        data: { IM: { send: "Hi, would you go out playing tomorrow?" } },
+                        message: "this is alpha applet. custom for http://localhost.com/alpha",
+                    },
+                    {
+                        code: 0,
+                        data: {
+                            IM: {
+                                recv: "Hi, would you go out playing tomorrow?",
+                                send: "WOW! Let's go playing tomorrow with alpha.",
+                            },
+                        },
+                        message: "this is beta applet. custom for http://localhost.com/beta",
+                    },
+                    {
+                        code: 0,
+                        data: { IM: { recv: "Hi, would you go out playing tomorrow?" } },
+                        message: "this is sspanel.login(). login for http://localhost.com/login",
+                    },
+                    {
+                        code: 0,
+                        data: { IM: { recv: "WOW! Let's go playing tomorrow with alpha." } },
+                        message: "this is sspanel.signin(). signin for http://localhost.com/signin",
+                    },
+                ],
+                exception: [],
+            },
+        },
+        {
+            domain: "http://localhost.net",
+            save: {
+                source: [
+                    {
+                        code: 0,
+                        data: { IM: { send: "Hi, would you go out playing tomorrow?" } },
+                        message: "this is alpha applet. custom for http://localhost.net/alpha",
+                    },
+                    {
+                        code: 0,
+                        data: {
+                            IM: {
+                                recv: "Hi, would you go out playing tomorrow?",
+                                send: "WOW! Let's go playing tomorrow with alpha.",
+                            },
+                        },
+                        message: "this is beta applet. custom for http://localhost.net/beta",
+                    },
+                    {
+                        code: 0,
+                        data: { IM: { recv: "Hi, would you go out playing tomorrow?" } },
+                        message: "this is sspanel.login(). login for http://localhost.net/login",
+                    },
+                    {
+                        code: 0,
+                        data: { IM: { recv: "WOW! Let's go playing tomorrow with alpha." } },
+                        message: "this is sspanel.signin(). signin for http://localhost.net/signin",
+                    },
+                ],
+                exception: [],
+            },
+        },
+    ],
+}
 
-multiple.model end!
 demo end!

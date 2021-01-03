@@ -26,7 +26,6 @@ import site from "./site.parser.js"; // domain.parser
 
 const variable = {
     object: {}, // model 转化后的所有变量
-    chain: null,
 };
 
 function parser(pattern, value, filter, callback = (object) => {}) {

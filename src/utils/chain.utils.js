@@ -63,10 +63,6 @@ class chain {
                 break;
         }
 
-        if (!!source & source.hasOwnProperty("save")) {
-            source = source.save;
-        } // 如果有 save 属性
-
         if (verify.type(this.#input.callback.depend, "function")) {
             source = this.#input.callback.depend(source);
         } // 回调，过滤 depend

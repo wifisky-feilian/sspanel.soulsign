@@ -20,38 +20,12 @@ const variable = {
             login: function (source, site, argument) {
                 let message = `this is sspanel.login(). login for ${site.url}`;
                 console.log(message);
-                return { code: 0, data: source, message };
+                return { code: 0, data: { IM: { recv: source } }, message };
             },
             signin: function (source, site, argument) {
                 let message = `this is sspanel.signin(). signin for ${site.url}`;
                 console.log(message);
-                return { code: 0, data: source, message };
-            },
-        },
-        discuz: {
-            dsu: {
-                login: function () {
-                    return "this is discuz.dsu.login.";
-                },
-                signin: function () {
-                    return "this is discuz.dsu.signin.";
-                },
-            },
-            dc: {
-                login: function () {
-                    return "this is discuz.dc.login.";
-                },
-                signin: function () {
-                    return "this is discuz.dc.signin.";
-                },
-            },
-            k: {
-                login: function () {
-                    return "this is discuz.k.login.";
-                },
-                signin: function () {
-                    return "this is discuz.k.signin.";
-                },
+                return { code: 0, data: { IM: { recv: source } }, message };
             },
         },
     },
@@ -139,9 +113,9 @@ function parser_applet(object) {
             key(source) {
                 return source.info.name;
             },
-            depend(source){
-                return "";
-            }
+            depend(source) {
+                return !!source.save ? source.save.data.IM.send : source.save;
+            },
         }
     ); // 创建 applet 控制链
 } // 解析
