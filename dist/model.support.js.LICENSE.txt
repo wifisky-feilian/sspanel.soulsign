@@ -1,0 +1,9 @@
+/**
+ * [model.support]{@link https://github.com/miiwu/model.iott}
+ *
+ * @namespace model.support
+ * @version 0.0.1
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
