@@ -23,7 +23,7 @@ const model = [
                     callback: function (source, site, argument) {
                         console.log(site.auth);
 
-                        return { code: 0, data: "axios.get(site.url)", message: "login" };
+                        return { code: 0, data: "axios.get(site.url)", message: source };
 
                         /*
                          
@@ -39,7 +39,7 @@ const model = [
                 info: {
                     name: "sspanel.signin",
                     callback: function (source, site, argument) {
-                        return { code: 0, data: "axios.post(site.url)", message: "signin" };
+                        return { code: 0, data: "axios.post(site.url)", message: source };
 
                         /*
                          

@@ -60,7 +60,7 @@ class probe {
 
         let bool = this.#exist(path);
 
-        existing(this.#property); // 回调
+        if (bool) existing(this.#property); // 回调
 
         this.#stack.pop();
 

@@ -10,7 +10,7 @@
 
 "use strict";
 
-import { log } from "../utils/log.utils.js"; // log.utils
+import log from "../utils/log.utils.js"; // log.utils
 import { operate, select } from "../utils/share.utils.js"; // share.utils
 
 const variable = {

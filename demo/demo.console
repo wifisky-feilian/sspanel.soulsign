@@ -26,8 +26,8 @@ site filter
             credential: [{ type: "browser" }],
             save: {
                 source: [
-                    { code: 0, data: "axios.get(site.url)", message: "login" },
-                    { code: 0, data: "axios.post(site.url)", message: "signin" },
+                    { code: 0, data: "axios.get(site.url)" },
+                    { code: 0, data: "axios.post(site.url)", message: "axios.get(site.url)" },
                 ],
                 exception: [],
             },
@@ -37,8 +37,8 @@ site filter
             credential: [{ type: "taken", source: "!@#$%^&*()_+" }],
             save: {
                 source: [
-                    { code: 0, data: "axios.get(site.url)", message: "login" },
-                    { code: 0, data: "axios.post(site.url)", message: "signin" },
+                    { code: 0, data: "axios.get(site.url)" },
+                    { code: 0, data: "axios.post(site.url)", message: "axios.get(site.url)" },
                 ],
                 exception: [],
             },
