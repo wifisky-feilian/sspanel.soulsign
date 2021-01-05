@@ -5,29 +5,28 @@
 import applet from "../src/support/applet.support.js"; // applet.support
 
 const sspanel = {
-    login: {
-        info: {
-            name: "sspanel.login",
-            callback: function (source, site, argument) {
-                console.log(site.auth);
+    login(auth) {
+        return {
+            info: {
+                name: "sspanel.login",
+                callback: function (packet) {
+                    return { code: 0, data: "axios.get(site.url)", message: packet.source.get(-1) };
 
-                return { code: 0, data: "axios.get(site.url)", message: source };
-
-                /*
-             
-            return { code: 0, data: axios.get(site.url.get) };
-
-            */
-            },
-        }, // applet 信息
-        auth: true, // applet 认证
-        argument: { path: ["auth/login"], keyword: [] },
+                    /*
+                 
+                return { code: 0, data: axios.get(site.url.get) };
+    
+                */
+                },
+            }, // applet 信息
+            argument: { path: ["auth/login"], auth: applet.auth.parser(auth) },
+        };
     },
     signin: {
         info: {
             name: "sspanel.signin",
-            callback: function (source, site, argument) {
-                return { code: 0, data: "axios.post(site.url)", message: source };
+            callback: function (packet) {
+                return { code: 0, data: "axios.post(site.url)", message: packet.source.get("sspanel.login") };
 
                 /*
                  
@@ -39,7 +38,7 @@ const sspanel = {
             },
         },
         argument: { path: ["user/checkin"], keyword: [] },
-        dependence: "sspanel.login", // applet 依赖
+        dependence: ["sspanel.login"], // applet 依赖
     },
 };
 
@@ -58,10 +57,8 @@ import model from "../src/support/model.support.js"; // model.support
 const group = [
     [
         "platform", // 平台
-        "auth", // 认证方式
         "applet", // 小程序
         "site", // 网站
-        [],
         [],
         [],
         [],
@@ -76,16 +73,6 @@ const group = [
                             code: true,
                             message: `type of source (value.${situation.path.join(".")}) is not string`,
                         };
-                    }
-
-                    return { code: false };
-                },
-            ],
-            [
-                function (source, situation) {
-                    console.log("auth filter");
-                    if (!model.share.verify.type(source, "object.Array")) {
-                        return { code: true };
                     }
 
                     return { code: false };
@@ -130,8 +117,7 @@ import iott from "../src/iott.js"; // iott
 iott.line.parser(
     ...extract4group([
         "chrome.soulsign", // 平台 (string|object)
-        ["browser", "taken"], // 认证方式 [(string|object)]
-        [extract4sspanel("login"), extract4sspanel("signin")], // 小程序 [object]
+        [extract4sspanel("login")(["browser", "taken"]), extract4sspanel("signin")], // 小程序 [object]
         [
             "http://localhost.com", // 只能不需要凭据时能使用
             { domain: "http://localhost.net", credential: [{ type: "taken", source: "!@#$%^&*()_+" }] }, // 必须有凭据

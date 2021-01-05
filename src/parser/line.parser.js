@@ -28,46 +28,63 @@ import site from "./site.parser.js"; // domain.parser
 const variable = {
     object: {}, // model 转化后的所有变量
     probe: null,
+    method: {
+        parser(probe, object) {
+            probe.access(["platform"], (property) => {
+                platform.parser(object);
+            });
+            probe.access(["site"], (property) => {
+                site.parser(object);
+            });
+            probe.access(["applet"], (property) => {
+                applet.parser(object);
+            });
+
+            log.debug.record("line.parser.control.access() complete.");
+        },
+        operate(argument, probe, object) {
+            probe.access(["site"], (property) => {
+                applet.operate(argument.section[0], argument.section[1], property.get); // 运行 applet
+            }); // 获取 site
+        },
+    },
 };
 
-function parser(pattern, value, filter, callback = (object) => {}) {
-    model.parser(pattern, variable.object, value, filter); // 解析 pattern
+/**
+ * Parser the pattern format to object that probe attached, filter the value, then assign to the object
+ * @param {array} pattern
+ * @param {array} value
+ * @param {array} filter
+ * @param {function(probe, object)} callback
+ */
 
-    log.debug.record("line.parser.model.parser() complete.");
+function parser(pattern, value, filter, callback = variable.method.parser) {
+    model.parser(pattern, variable.object, value, filter); // 解析 pattern
+    log.debug.record("line.parser parser complete.");
 
     variable.probe = new probe(variable.object); // 创建 variable.object 探针
-
-    variable.probe.access(["platform"], (property) => {
-        platform.parser(variable.object);
-    });
-    variable.probe.access(["auth"], (property) => {
-        auth.parser(variable.object);
-    });
-    variable.probe.access(["site"], (property) => {
-        site.parser(variable.object);
-    });
-    variable.probe.access(["applet"], (property) => {
-        applet.parser(variable.object);
-    });
-
-    log.debug.record("line.parser.control.access() complete.");
+    log.debug.record("line.parser probe complete.");
 
     try {
-        callback(variable.object);
+        callback(variable.probe, variable.object);
     } catch (exception) {
-        log.exception.record(2, { location: "line.parser.argument.callback()", exception });
+        log.exception.record(2, { location: "line.parser.arguments.callback()", exception });
     }
 } // 解析
 
-function operate(start = 0, end) {
-    variable.probe.access(["site"], (site) => {
-        share.operate.table(site.get, (site) => {
-            variable.probe.access(["auth"], (auth) => {
-                applet.operate(start, end, site, auth.get); // 运行 applet
-            }); // 获取 auth
-        }); // 迭代 site
-    }); // 获取 site
-}
+/**
+ * Operate callback with the argument
+ * @param {array} argument
+ * @param {function(argument, probe, object)} callback
+ */
+
+function operate(argument = { section: [0] }, callback = variable.method.operate) {
+    try {
+        callback(argument, variable.probe, variable.object);
+    } catch (exception) {
+        log.exception.record(2, { location: "line.operate.arguments.callback()", exception });
+    }
+} // 运行
 
 export { variable, parser, operate };
 

@@ -15,7 +15,7 @@
 
 "use strict";
 
-import { operate } from "../utils/share.utils.js"; // share.utils
+import { operate, verify } from "../utils/share.utils.js"; // share.utils
 
 import { parser_command } from "./command.parser.js"; // command.parser
 
@@ -34,9 +34,12 @@ function parser_site(object) {
                 if (!site.hasOwnProperty("credential")) site.credential = [{ type: "browser" }];
                 break;
             case "object": // 对象类型，即用户自定义类型
+                if (verify.type(site.credential[0], "object.Object")) {
+                    site.credential = [site.credential];
+                } // 单用户，转换为多用户
                 if (site.hasOwnProperty("custom")) {
                     site.custom = parser_command(site.custom); // 解析命令
-                }
+                } // 有自定义行为
                 break;
             default:
                 break;

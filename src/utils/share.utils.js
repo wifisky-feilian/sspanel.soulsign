@@ -24,33 +24,67 @@
 const operate = {
     table: function (table, operator = (item, tools) => {}, argument = []) {
         const control = {
-            index: 0, // 当前所在索引
-            abort: false, // 是否为“退出”状态
-            continue: false, // 是否为“继续”状态
-            method: function (method, message, record) {
-                this[method] = true;
-                if (record)
-                    this.save.exception.push({ expectation: `call control.${method}`, index: this.index, message });
+            status: {
+                index: 0, // 当前所在索引
+                goto: { index: "here", save: undefined }, // 跳转到的索引
+                abort: false, // 是否为“退出”状态
+                continue: false, // 是否为“继续”状态
+            }, // 状态
+            method(method, status, message, record) {
+                this.status[method] = status; // 操作状态对象
+                if (record) {
+                    this.save.exception.push({
+                        expectation: `call control.${method}`,
+                        index: this.index,
+                        message,
+                    });
+                } // 是否记录到异常
             }, // 方法模板
             export: {
                 source: [], // 资源
                 exception: [], // 异常
-                abort: function (message = "", record = false) {
-                    control.method("abort", message, record);
+                abort(message = "", record = false) {
+                    control.method("abort", false, message, record);
                 }, // 退出
-                continue: function (message = "", record = false) {
-                    control.method("continue", message, record);
+                continue(message = "", record = false) {
+                    control.method("continue", false, message, record);
                 }, // 继续
-                wait: function () {
+                goto(index = "save", data, message = "", record = false) {
+                    let save = control.status.goto.save; // 上次跳转时传入的参数
+
+                    control.method("goto", { index, save: data }, message, record);
+
+                    return save;
+                }, // 跳转
+                wait() {
                     console.debug("This function is not ready.");
                 }, // 等待
             },
         };
 
-        for (; control.index < table.length && !control.abort; control.index++) {
+        for (
+            ;
+            control.status.index < table.length && !control.status.abort;
+            control.status.index = (function (index, goto) {
+                switch (typeof goto) {
+                    case "number":
+                        if (0 > goto) {
+                            if (index > Math.abs(goto)) {
+                                goto += index;
+                            } else {
+                                goto = 0;
+                            } // [{负数，正常}, {负数，溢出}]
+                        } // 负数，表示反向增加
+                        return goto;
+                    case "string":
+                    default:
+                        return index + 1;
+                }
+            })(control.status.index, control.status.goto.index)
+        ) {
             operator(
-                table[control.index],
-                { table, index: control.index, control: control.export, argument },
+                table[control.status.index],
+                { table, index: control.status.index, control: control.export, argument },
                 ...argument
             );
         } // 循环

@@ -30,11 +30,11 @@ const variable = {
     },
 };
 
-function parser_auth(object) {
-    object.auth.forEach((auth, index) => {
+function parser_auth(auth) {
+    auth.forEach((auth, index, array) => {
         switch (typeof auth) {
             case "string": // 字符串，""
-                object.auth[index] = [auth, select.object(variable.type, [auth])[0]];
+                array[index] = [auth, select.object(variable.type, [auth])[0]];
                 break;
             case "object": // 对象，{ name: "", callback: function(){} }
                 if (Object instanceof auth) {
@@ -46,7 +46,7 @@ function parser_auth(object) {
         }
     });
 
-    object.auth = new Map(object.auth); // 创建 map
+    return new Map(auth); // 创建 map
 }
 
 function operate_auth(auth, site) {

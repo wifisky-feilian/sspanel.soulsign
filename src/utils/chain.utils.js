@@ -16,7 +16,7 @@ class chain {
     #input = { persistent: [], dependent: {}, callback: {} }; // 输入
     #count = { persistent: 0, dependent: 0 }; // 关于 #array 的计数
     #array = []; // operate() 运行的表
-    #index = 0; // operate() 时，当前运行的索引
+    #index = -1; // operate() 时，当前运行的索引
     #save = {}; // operate() 的结果
 
     #push(array) {
@@ -47,27 +47,37 @@ class chain {
         this.#array = [...this.#array]; // 转回 array 类型
     } // 虚拟 this.#array 为 map，可以使用 map 方式操作 this.#array
 
-    #depend(symbol = this.#index) {
-        let source = {};
+    #depend(symbol = [this.#index], depend) {
+        return new Map(
+            operate.table(symbol, (symbol, tools) => {
+                let source = {},
+                    filter = true;
 
-        switch (typeof symbol) {
-            case "string": // 字符串，即名字
-                this.#virtual((map) => {
-                    source = map.get(symbol);
-                });
-                break;
-            case "number": // 数字，即索引
-                source = this.#array[symbol][1];
-                break;
-            default:
-                break;
-        }
+                switch (typeof symbol) {
+                    case "string": // 字符串，即名字
+                        this.#virtual((map) => {
+                            source = map.get(symbol);
+                        });
+                        break;
+                    case "number": // 数字，即索引，为了可能的增删改查后的稳定，不建议外部使用
+                        if (0 <= symbol) {
+                            source = this.#array[symbol][1];
+                            break;
+                        } // 不小于零，正常索引
+                    default:
+                        if (-1 === symbol) symbol = "depend";
+                        source = depend; // 错误情况，包括首次的 -1
+                        filter = false;
+                        break;
+                }
 
-        if (verify.type(this.#input.callback.depend, "function")) {
-            source = this.#input.callback.depend(source);
-        } // 回调，过滤 depend
+                if (filter && verify.type(this.#input.callback.depend, "function")) {
+                    source = this.#input.callback.depend(source);
+                } // 回调，过滤 depend
 
-        return source;
+                tools.control.source.push([symbol, source]);
+            }).source
+        );
     } // 依赖，默认依赖前一个
 
     constructor(
@@ -122,13 +132,13 @@ class chain {
         } // 有指令
     } // 根据 this.#input.config 配置 this.#list 和  this.#count
 
-    operate(callback = { try: () => {}, catch: () => {}, succeed: () => {} }, situation = [], start = 0, end) {
+    operate(callback = { try: () => {}, catch: () => {}, succeed: () => {} }, situation = [], section = [0], depend) {
         this.#save = operate.table(
-            this.#array.slice(start, end),
+            this.#array.slice(...section),
             (source, tools, callback, situation) => {
                 let packet = {
                     self: source[1],
-                    source: this.#depend(source[1].dependence),
+                    source: this.#depend(source[1].dependence, depend),
                     tools: { ...tools },
                     situation,
                     result: {},

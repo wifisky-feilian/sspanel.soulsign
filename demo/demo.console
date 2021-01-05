@@ -1,25 +1,48 @@
 platform filter
-auth filter
 applet filter
 site filter
 
-{code: false, message: 'browser auth, for "http://localhost.com", passed', data: 'this is browser auth'}
-{code: false, message: 'taken auth, for "http://localhost.net", passed', data: 'this is taken auth, your taken is "!@#$%^&*()_+"'}
+(1) [undefined]
+(1) ['axios.get(site.url)']
+(1) [undefined]
+(1) ['axios.get(site.url)']
 
 {
-    auth: {},
-    applet: {
-        global: [
-            { info: { name: "sspanel.login" }, auth: true, argument: { path: ["auth/login"], keyword: [] } },
-            {
-                info: { name: "sspanel.signin" },
-                argument: { path: ["user/checkin"], keyword: [] },
-                dependence: "sspanel.login",
-                auth: false,
+    applet: [
+        {
+            info: {
+                name: "sspanel.login",
+                packet: {
+                    site: {
+                        domain: "http://localhost.net",
+                        url: "http://localhost.net/user/checkin",
+                        path: "user/checkin",
+                    },
+                    source: {},
+                    argument: { path: ["auth/login"], auth: {} },
+                    situation: [],
+                },
             },
-        ],
-        custom: [],
-    },
+            argument: { path: ["auth/login"], auth: {} },
+        },
+        {
+            info: {
+                name: "sspanel.signin",
+                packet: {
+                    site: {
+                        domain: "http://localhost.net",
+                        url: "http://localhost.net/user/checkin",
+                        path: "user/checkin",
+                    },
+                    source: {},
+                    argument: { path: ["user/checkin"], keyword: [] },
+                    situation: [],
+                },
+            },
+            argument: { path: ["user/checkin"], keyword: [] },
+            dependence: ["sspanel.login"],
+        },
+    ],
     site: [
         {
             domain: "http://localhost.com",
@@ -34,7 +57,7 @@ site filter
         },
         {
             domain: "http://localhost.net",
-            credential: [{ type: "taken", source: "!@#$%^&*()_+" }],
+            credential: [[{ type: "taken", source: "!@#$%^&*()_+" }]],
             save: {
                 source: [
                     { code: 0, data: "axios.get(site.url)" },

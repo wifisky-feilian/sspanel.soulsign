@@ -12,10 +12,14 @@
 
 /**
  * @module share.utils - offer some basic utils
+ *
+ * @module auth.parser - offer some parser for auth credential
  * @module source.parser - offer some parser for html source
  */
 
 import share from "../utils/share.utils.js"; // share.utils
+
+import auth from "../parser/auth.parser.js"; // auth.parser
 import source from "../parser/source.parser.js"; // source.parser
 
 /**
@@ -33,6 +37,6 @@ function extract(applet, name, argument = applet[name].argument) {
     return applet;
 } // 提取
 
-export { share, source, extract };
+export { share, auth, source, extract };
 
-export default { share, source, extract };
+export default { share, auth, source, extract };
