@@ -1,5 +1,5 @@
 /**
- * [debug.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [debug.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace debug.utils
  * @version 2.0.0

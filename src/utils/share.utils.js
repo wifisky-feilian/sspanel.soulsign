@@ -1,5 +1,5 @@
 /**
- * [share.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [share.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace share.utils
  * @version 2.0.0
@@ -13,6 +13,15 @@
  */
 
 "use strict";
+
+const map = {
+    type: new Map([
+        ["number", "number"],
+        ["string", "string"],
+        ["object", "object.Object"],
+        ["array", "object.Array"],
+    ]),
+};
 
 /**
  * @constant {object} operate Table driven operation
@@ -104,33 +113,48 @@ const convert = {
 };
 
 const verify = {
-    type: function (source, type) {
-        type = convert.path(type); // 根据 "." 区分第一或第二类型
+    type: function (
+        source,
+        type,
+        callback = (save) => {
+            return save.code;
+        }
+    ) {
+        function type4string(source, type) {
+            type = convert.path(type); // 根据 "." 区分第一或第二类型
 
-        if (type[0] === typeof source) {
-            if (1 < type.length) {
-                if (type[1].match("^[A-Za-z]+$")) return eval(`source instanceof ${type[1]}`);
-                else return false; // [{第二个类型只包含字母，检查是否符合}, {第二个类型不只包含字母，不检查，为假}]
-            } // 如果存在第二个类型
+            if (type[0] === typeof source) {
+                if (1 < type.length) {
+                    if (type[1].match("^[A-Za-z]+$")) return eval(`source instanceof ${type[1]}`);
+                    else return false; // [{第二个类型只包含字母，检查是否符合}, {第二个类型不只包含字母，不检查，为假}]
+                } // 如果存在第二个类型
 
-            return true;
-        } // "." 之前的类型，即第一个类型是否满足
+                return true;
+            } // "." 之前的类型，即第一个类型是否满足
 
-        return false;
-    }, // 类型
-    types: function (source, types = ["object.Object"]) {
-        for (const type of types) {
-            if (this.type(source, type)) return true;
+            return false;
+        } // 单个类型
+
+        let save = { code: false };
+
+        if ("string" === typeof type) type = [type];
+
+        for (const item of type) {
+            if (type4string(source, item)) {
+                save.code = true;
+                save.type = item;
+                break;
+            }
         } // 遇到一个符合的即为 "真"
 
-        return false;
-    }, // 类型集
+        return callback(save);
+    }, // 类型
     property: function (object, path, farthest = (object, bool) => {}) {
         let property = null;
 
         path = convert.path(path); // 根据 "." 区分层级
 
-        while (!!object) {
+        while (object) {
             if (object.hasOwnProperty((property = path[0]))) {
                 object = object[property];
                 path.shift();
@@ -151,6 +175,11 @@ const verify = {
 }; // 验证
 
 const select = {
+    type(symbol = []) {
+        return operate.table(symbol, (symbol, tools) => {
+            tools.control.source.push(map.type.get(symbol));
+        }).source;
+    }, // 选出 symbol 对应的 verify.type 的类型数组
     array: function (array = [], channel = 0) {
         return array[Number(channel)];
     }, // 数组
@@ -182,6 +211,31 @@ const select = {
     }, // 选出相同的最远的索引
 }; // 选择
 
-export { operate, convert, verify, select };
+const assert = function (source, type, name, callback) {
+    let result = verify.type(source, select.type(type), (save) => {
+        save = { code: !save.code };
+        if (save.code) save.message = `type of ${name} is wrong, should be ${type.join("|")}`;
+        return save;
+    });
 
-export default { operate, convert, verify, select };
+    if (result.code && "function" === typeof callback) return callback(result);
+    else return result; // [{没错误且 callback 为函数类型}]
+};
+
+const call = function (source, argument, hook = () => {}, callback = (arg) => arg) {
+    let save = { result: {} };
+
+    return operate.table(source, (source, tools) => {
+        save.argument = argument[tools.index];
+
+        hook(save, tools);
+
+        if (verify.type(source, ["function"])) {
+            save.result = callback(source(...save.argument), tools);
+        }
+    });
+};
+
+export { operate, convert, verify, select, assert, call };
+
+export default { operate, convert, verify, select, assert, call };

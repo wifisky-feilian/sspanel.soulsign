@@ -1,5 +1,5 @@
 /**
- * [time.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [time.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace time.utils
  * @version 2.0.0
@@ -16,7 +16,7 @@ function timestamp() {
     return `${variable.toLocaleString(undefined, {
         hour12: false, // 24h
     })}.${variable.getMilliseconds()}`;
-} 
+}
 
 function ready(time) {
     return true;

@@ -1,8 +1,48 @@
 /**
- * [model.support]{@link https://github.com/miiwu/model.iott}
+ * [applet.parser]{@link https://github.com/miiwu/domalet}
+ *
+ * @namespace applet.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [log.utils]{@link https://github.com/miiwu/domalet}
+ *
+ * @namespace log.utils
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [model.support]{@link https://github.com/miiwu/model.domalet}
  *
  * @namespace model.support
  * @version 0.0.1
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [platform.parser]{@link https://github.com/miiwu/domalet}
+ *
+ * @namespace platform.parser
+ * @version 2.0.0
+ * @author miiwu [i.miiwu@outlook.com]
+ * @copyright miiwu
+ * @license Apache License 2.0
+ */
+
+/**
+ * [site.parser]{@link https://github.com/miiwu/domalet}
+ *
+ * @namespace site.parser
+ * @version 2.0.0
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu
  * @license Apache License 2.0

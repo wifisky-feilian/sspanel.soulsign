@@ -1,5 +1,5 @@
 /**
- * [value.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [value.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace value.parser
  * @version 2.0.0

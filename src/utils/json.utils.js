@@ -1,5 +1,5 @@
 /**
- * [json.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [json.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace json.utils
  * @version 2.0.0

@@ -1,5 +1,5 @@
 /**
- * [encrypt.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [encrypt.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace encrypt.utils
  * @version 2.0.0

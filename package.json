@@ -1,24 +1,26 @@
 {
-    "name": "iott",
+    "name": "domalet",
     "version": "2.0.0",
-    "description": "if online then that",
-    "main": "dist/iott.js",
+    "description": "domain, applet, main = app, then, domalet.",
+    "main": "dist/domalet.js",
     "directories": {
         "doc": "docs"
     },
     "scripts": {
-        "build": "webpack --config webpack.config.js"
+        "build": "webpack --config webpack.config.js",
+        "eslint": "eslint src --ext .js,.html --fix",
+        "prettier": "prettier --write src/** --check"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/miiwu/sspanel.soulsign.git"
+        "url": "git+https://github.com/miiwu/domalet.git"
     },
     "author": "miiwu",
     "license": "Apache-2.0",
     "bugs": {
-        "url": "https://github.com/miiwu/sspanel.soulsign/issues"
+        "url": "https://github.com/miiwu/domalet/issues"
     },
-    "homepage": "https://github.com/miiwu/sspanel.soulsign#readme",
+    "homepage": "https://github.com/miiwu/domalet#readme",
     "devDependencies": {
         "@babel/core": "^7.12.10",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
@@ -28,6 +30,8 @@
         "@babel/runtime-corejs3": "^7.12.5",
         "babel-loader": "^8.2.2",
         "core-js": "^3.8.1",
+        "eslint": "^7.17.0",
+        "prettier": "^2.2.1",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.1"
     }

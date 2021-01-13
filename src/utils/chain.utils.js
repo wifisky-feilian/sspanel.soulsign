@@ -1,5 +1,5 @@
 /**
- * [chain.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [chain.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace chain.utils
  * @version 2.0.0

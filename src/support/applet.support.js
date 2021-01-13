@@ -1,5 +1,5 @@
 /**
- * [applet.support]{@link https://github.com/miiwu/model.iott}
+ * [applet.support]{@link https://github.com/miiwu/applet.domalet}
  *
  * @namespace applet.support
  * @version 0.0.1
@@ -14,29 +14,34 @@
  * @module share.utils - offer some basic utils
  *
  * @module auth.parser - offer some parser for auth credential
- * @module source.parser - offer some parser for html source
+ * @module meta.parser - offer some parser for html source
  */
 
 import share from "../utils/share.utils.js"; // share.utils
 
 import auth from "../parser/auth.parser.js"; // auth.parser
-import source from "../parser/source.parser.js"; // source.parser
+import meta from "../parser/meta.parser.js"; // meta.parser
 
 /**
- * Return the applet
+ * Return the applet object
  * @param {object} applet - the applet object of your xxx.applet.js
- * @param {array} argument - the argument property of applet when line.parser()
+ * @param {array} callback - the callback with applet argument
  * @return {object} - the applet object with argument
  */
 
-function extract(applet, name, argument = applet[name].argument) {
-    applet = applet[name];
+function extract(
+    applet,
+    name,
+    callback = (applet) => {
+        return applet;
+    }
+) {
+    if (!applet.hasOwnProperty(name))
+        throw `applet.support -> "${name}" is not included now, you must choose from: ${Object.keys(applet).join("|")}`;
 
-    applet.argument = argument;
-
-    return applet;
+    return callback(applet[name]);
 } // 提取
 
-export { share, auth, source, extract };
+export { share, auth, meta, extract };
 
-export default { share, auth, source, extract };
+export default { share, auth, meta, extract };

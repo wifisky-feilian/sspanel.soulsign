@@ -1,5 +1,5 @@
 /**
- * [probe.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [probe.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace probe.utils
  * @version 2.0.0

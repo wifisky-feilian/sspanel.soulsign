@@ -1,6 +1,6 @@
-# iott
+# domalet<sup>*m<u>ain</u> = a<u>pp</u>*</sup>
 
-if online then that.
+domain, applet, ***m<u>ain</u> = a<u>pp</u>***, then, **dom**<sup>ain</sup>**a**<sub>pp</sub>**let**.
 
 ## 情景
 
@@ -14,7 +14,7 @@ if online then that.
   
 - [ ] 检查或过滤 `line.parser` 时输入的 `value`，抽象为 `filter/过滤器`
 
-- [ ] 支持多网站，抽象为 `site/网站`
+- [ ] 支持多网站多账户，抽象为 `site/网站`
 
 - [ ] 不仅可 `签到`，可扩展添加 `抽奖` 等的，抽象为 `applet/小程序`
   - `applet.hook()`：不更改 applet 的情况下，支持修改返回的消息？
@@ -23,13 +23,14 @@ if online then that.
   
 - [ ] 可以使用 `dom` 匹配和纯 `regexp/正则表达式` 匹配信息，抽象为 `source/资源`
   - `dom`：`jsdom` 或其他取代 `DOMParser`？
-  - 名称好像太别扭？emmm，有点辨识度不高？meta?
   
 - [ ] 可以使用 `taken`、`password` 等的认证，抽象为 `auth/认证`
 
   - 放在 `applet` 中
 
 - [ ] 可以在 `chrome.soulsign` 和 `github.action` 上使用，抽象为 `platform/平台`
+
+  以上每个组件都要可支持跨上述的平台
 
 - [ ] 可以控制执行间隔，抽象为 `time/时间`
 

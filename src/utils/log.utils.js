@@ -1,5 +1,5 @@
 /**
- * [log.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [log.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace log.utils
  * @version 2.0.0
@@ -53,6 +53,9 @@ const variable = {
 
             return callback(variable.pool[zone]);
         }, // 查看
+        clear(zone) {
+            variable.pool[zone].length = 0;
+        }, // 清除
     },
 };
 

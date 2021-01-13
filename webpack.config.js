@@ -25,9 +25,10 @@ function generate(config) {
 }
 
 [
-    { name: "iott", entry: "./src/iott.js" },
-    { name: "applet.support", entry: "./src/support/applet.support.js" },
+    { name: "domalet", entry: "./src/domalet.js" },
+    { name: "auth.support", entry: "./src/support/auth.support.js" },
     { name: "model.support", entry: "./src/support/model.support.js" },
+    { name: "applet.support", entry: "./src/support/applet.support.js" },
 ].forEach((item) => {
     config.push(generate(item));
 });

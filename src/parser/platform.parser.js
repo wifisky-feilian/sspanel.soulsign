@@ -1,5 +1,5 @@
 /**
- * [platform.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [platform.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace platform.parser
  * @version 2.0.0
@@ -10,9 +10,10 @@
 
 "use strict";
 
-import { select } from "../utils/share.utils.js"; // share.utils
+import { select, assert } from "../utils/share.utils.js"; // share.utils
 
 const variable = {
+    assert: ["object", "string"], // 断言类型
     type: {
         chrome: {
             soulsign: function () {
@@ -27,12 +28,14 @@ const variable = {
     },
 };
 
+function assert_platform(platform) {
+    return assert(platform, variable.assert, "platform");
+} // 断言
+
 function parser_platform(object) {
     object.platform = select.object(variable.type, [object.platform])[0];
-}
+} // 解析
 
-function filter_platform(platform) {}
+export { variable, assert_platform, parser_platform };
 
-export { variable, parser_platform, filter_platform };
-
-export default { variable, parser: parser_platform, filter: filter_platform };
+export default { variable, assert: assert_platform, parser: parser_platform };

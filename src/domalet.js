@@ -1,7 +1,7 @@
 /**
- * [iott]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [domalet]{@link https://github.com/miiwu/domalet}
  *
- * @namespace iott
+ * @namespace domalet
  * @version 2.0.0
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu

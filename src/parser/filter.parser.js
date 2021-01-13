@@ -1,5 +1,5 @@
 /**
- * [filter.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [filter.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace filter.parser
  * @version 2.0.0
@@ -21,7 +21,7 @@ const variable = {
 };
 
 function parser_filter(filter, error) {
-    variable.input = !!filter ? filter : { global: [], custom: [] }; // 转存 filter
+    variable.input = filter ? filter : { global: [], custom: [] }; // 转存 filter
 
     variable.chain = new chain(variable.input.global, {
         source: variable.input.custom,
@@ -71,7 +71,7 @@ function parser_filter(filter, error) {
                         packet.tools.control.source.push({ source: error }); // 储存资源，指定错误时的值
                         packet.tools.control.exception.push({
                             errno: 2, // 错误
-                            message: message(packet, "failed."), // 信息
+                            message: message(packet, `failed: ${packet.result.message}`), // 信息
                             exception: packet.result,
                         }); // 储存异常
 

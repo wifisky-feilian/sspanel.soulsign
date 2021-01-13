@@ -1,5 +1,5 @@
 /**
- * [applet.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [applet.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace applet.parser
  * @version 2.0.0
@@ -17,6 +17,7 @@ import chain from "../utils/chain.utils.js"; // chain.utils
 import $auth from "../parser/auth.parser.js"; // auth.parser
 
 const variable = {
+    assert: ["array"],
     chain: null,
     layer: {
         site(start, end, site) {
@@ -71,7 +72,7 @@ const variable = {
         auth(site, applet) {
             let result = this.path(site, applet);
 
-            if (!!applet.argument.auth) {
+            if (applet.argument.auth) {
                 delete applet.info.packet.site.credential;
             } // 只认证一次
 
@@ -104,7 +105,7 @@ const variable = {
             let result = {};
 
             try {
-                result = applet.info.callback(applet.info.packet); // 执行小程序
+                result = applet.info.call(applet.info.packet); // 执行小程序
             } catch (exception) {
                 log.exception.record(2, { location: "applet.operate.layer.app()", detail: { result, exception } });
             }
@@ -116,6 +117,20 @@ const variable = {
     },
 };
 
+function assert_applet(applet) {
+    function fail(index) {
+        return [""][index];
+    }
+
+    return share.assert(applet, variable.assert, "applet", (verify) => {
+        share.operate.table(applet, (applet, tools) => {
+            if (!applet.hasOwnProperty("info")) {
+                tools.control.exception.push();
+            }
+        });
+    });
+} // 断言
+
 function parser_applet(object) {
     share.operate.table(object.applet, (applet) => {
         if (!applet.dependence) applet.dependence = undefined; // dependence，缺省为 (undefined / 前一个)
@@ -126,7 +141,7 @@ function parser_applet(object) {
             return source.info.name;
         }, // 键名
         depend(source) {
-            return !!source.save ? source.save.data : source.save;
+            return source.save ? source.save.data : source.save;
         }, // 依赖
     }); // 创建 applet 控制链
 } // 解析
@@ -135,6 +150,6 @@ function operate_applet(start, end, site) {
     variable.layer.site(start, end, site);
 } // 运行
 
-export { variable, parser_applet, operate_applet };
+export { variable, assert_applet, parser_applet, operate_applet };
 
-export default { variable, parser: parser_applet, operate: operate_applet };
+export default { variable, assert: assert_applet, parser: parser_applet, operate: operate_applet };

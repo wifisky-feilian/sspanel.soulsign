@@ -1,11 +1,9 @@
+
+------------------------+{ demo.chromium start! }+------------------------
+
 platform filter
 applet filter
 site filter
-
-(1) [undefined]
-(1) ['axios.get(site.url)']
-(1) [undefined]
-(1) ['axios.get(site.url)']
 
 {
     applet: [
@@ -46,7 +44,23 @@ site filter
     site: [
         {
             domain: "http://localhost.com",
-            credential: [{ type: "browser" }],
+            credential: [[{ type: "anonymous" }]],
+            save: {
+                source: [
+                    { code: 0, data: "axios.get(site.url)" },
+                    { code: 0, data: "axios.post(site.url)", message: "axios.get(site.url)" },
+                ],
+                exception: [],
+            },
+        },
+        {
+            domain: "http://localhost.cn",
+            credential: [
+                [
+                    { type: "password", source: { account: "1234567890", password: "1234567890" } },
+                    { type: "taken", source: "!@#$%^&*()_+" },
+                ],
+            ],
             save: {
                 source: [
                     { code: 0, data: "axios.get(site.url)" },
@@ -57,7 +71,10 @@ site filter
         },
         {
             domain: "http://localhost.net",
-            credential: [[{ type: "taken", source: "!@#$%^&*()_+" }]],
+            credential: [
+                [{ type: "taken", source: "!@#$%^&*()_+" }],
+                [{ type: "password", source: { account: "1234567890", password: "1234567890" } }],
+            ],
             save: {
                 source: [
                     { code: 0, data: "axios.get(site.url)" },
@@ -69,4 +86,4 @@ site filter
     ],
 }
 
-demo end!
+------------------------+{ demo.chromium end! }+------------------------

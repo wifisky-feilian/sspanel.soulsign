@@ -1,5 +1,5 @@
 /**
- * [pipe.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [pipe.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace pipe.utils
  * @version 2.0.0

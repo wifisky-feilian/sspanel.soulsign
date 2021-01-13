@@ -1,5 +1,5 @@
 /**
- * [model.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [model.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace model.parser
  * @version 2.0.0
@@ -94,7 +94,7 @@ function parser_model(
 
                     log.exception.record(
                         2, // 错误
-                        { location: "pattern.parser.callback.leaf()", exception }
+                        { location: "pattern.parser.callback.leaf().try-catch", exception }
                     );
                 }
 
@@ -103,7 +103,8 @@ function parser_model(
 
                 $filter.variable.save.exception.forEach((element) => {
                     log.exception.record(element.errno, {
-                        location: "pattern.parser.callback.leaf()",
+                        location: "pattern.parser.callback.leaf().log",
+                        brief: element.message,
                         detail: element,
                     });
                 }); // 记录 filter 异常到 log.exception

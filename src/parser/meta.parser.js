@@ -1,7 +1,7 @@
 /**
- * [source.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [meta.parser]{@link https://github.com/miiwu/domalet}
  *
- * @namespace source.parser
+ * @namespace meta.parser
  * @version 2.0.0
  * @author miiwu [i.miiwu@outlook.com]
  * @copyright miiwu

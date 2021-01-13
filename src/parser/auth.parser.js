@@ -1,5 +1,5 @@
 /**
- * [auth.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [auth.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace auth.parser
  * @version 2.0.0
@@ -11,35 +11,74 @@
 "use strict";
 
 import log from "../utils/log.utils.js"; // log.utils
-import { operate, select } from "../utils/share.utils.js"; // share.utils
+import { operate, select, call } from "../utils/share.utils.js"; // share.utils
 
 const variable = {
     type: {
-        taken: function (source, url) {
-            return { code: false, data: `this is taken auth, your taken is "${source}"` };
+        anonymous: {
+            name: "anonymous",
+            call(source, url) {
+                return { code: false, data: "this is anonymous auth" };
+            },
         },
-        password: function (source, url) {
-            return { code: false, data: "this is password auth" };
-        },
-        cookie: function (source, url) {
-            return { code: false, data: "this is password auth" };
-        },
-        browser: function (source, url) {
-            return { code: false, data: "this is browser auth" };
-        },
+    },
+    layer: {
+        account(auth, site) {
+            return operate.table(site.credential, (account, tools) => {
+                tools.control.source.push(this.keychain(auth, account, site.url));
+            }).source; // 返回各用户的结果
+        }, // 账户层
+        keychain(auth, keychain, site) {
+            let result = {};
+
+            let save = operate.table(keychain, (credential, tools) => {
+                result = this.authentication(auth.get(credential.type), { key: credential.source, door: site.url });
+                tools.control.source.push(result); // 记录每一次的结果
+
+                if (!result.code) {
+                    log.debug.record(`the auth of ${site.domain} is ${credential.type}`, () => {
+                        site.debug.auth = credential.type;
+                    }); // 调试信息
+
+                    tools.control.abort();
+                } // 如果认证成功，则退出不再继续认证
+            }); // 返回结果
+
+            return save.source.slice(-1)[0]; // 返回最后一次结果
+        }, // 凭据串层
+        authentication(authentication, credential) {
+            try {
+                return call(
+                    [authentication.assert, authentication.call],
+                    [
+                        [credential.key, credential.door],
+                        [credential.key, credential.door],
+                    ],
+                    (save, tools) => {
+                        if (save.result.code) tools.control.abort();
+                    },
+                    (result, tools) => {
+                        result = Object.assign({ code: true }, result); // 默认为 true，失败
+                        return result;
+                    }
+                );
+            } catch (exception) {
+                log.exception.record(2, { location: "auth.operate.layer.authentication", exception });
+            }
+        }, // 凭据认证层
     },
 };
 
 function parser_auth(auth) {
+    auth.push("anonymous");
+
     auth.forEach((auth, index, array) => {
         switch (typeof auth) {
             case "string": // 字符串，""
                 array[index] = [auth, select.object(variable.type, [auth])[0]];
                 break;
-            case "object": // 对象，{ name: "", callback: function(){} }
-                if (Object instanceof auth) {
-                    auth = [auth.name, auth.callback];
-                } // 对象类型
+            case "object": // 对象，{ name: "", call: function() {}, assert: function() {} }
+                array[index] = [auth.name, auth];
                 break;
             default:
                 break;
@@ -50,29 +89,7 @@ function parser_auth(auth) {
 }
 
 function operate_auth(auth, site) {
-    let save = operate.table(site.credential, (credential, tools) => {
-        let result = {};
-
-        try {
-            result = Object.assign(
-                { code: false, message: `${credential.type} auth, for "${site.domain}", passed` },
-                auth.get(credential.type)(credential.source, site.url)
-            ); // 配置默认选项
-            tools.control.source.push(result); // 存储
-        } catch (exception) {
-            log.exception.record(2, { location: "auth.operate", exception });
-        }
-
-        if (!result.code) {
-            log.debug.record(`the auth of ${site.domain} is ${credential.type}`, () => {
-                site.debug.auth = credential.type;
-            }); // 调试信息
-
-            tools.control.abort();
-        }
-    }); // 返回结果
-
-    return save.source.slice(-1)[0]; // 返回最后一次结果
+    return variable.layer.account(auth, site);
 }
 
 export { variable, parser_auth, operate_auth };

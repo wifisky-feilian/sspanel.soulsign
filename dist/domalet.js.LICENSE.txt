@@ -1,5 +1,5 @@
 /**
- * [applet.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [applet.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace applet.parser
  * @version 2.0.0
@@ -9,7 +9,7 @@
  */
 
 /**
- * [chain.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [chain.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace chain.utils
  * @version 2.0.0
@@ -19,7 +19,7 @@
  */
 
 /**
- * [filter.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [filter.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace filter.parser
  * @version 2.0.0
@@ -29,7 +29,7 @@
  */
 
 /**
- * [line.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [line.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace line.parser
  * @version 2.0.0
@@ -39,7 +39,7 @@
  */
 
 /**
- * [log.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [log.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace log.utils
  * @version 2.0.0
@@ -49,7 +49,7 @@
  */
 
 /**
- * [model.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [model.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace model.parser
  * @version 2.0.0
@@ -59,7 +59,7 @@
  */
 
 /**
- * [platform.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [platform.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace platform.parser
  * @version 2.0.0
@@ -69,7 +69,7 @@
  */
 
 /**
- * [probe.utils]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [probe.utils]{@link https://github.com/miiwu/domalet}
  *
  * @namespace probe.utils
  * @version 2.0.0
@@ -79,17 +79,7 @@
  */
 
 /**
- * [site.parser]{@link https://github.com/miiwu/sspanel.soulsign}
- *
- * @namespace site.parser
- * @version 2.0.0
- * @author miiwu [i.miiwu@outlook.com]
- * @copyright miiwu
- * @license Apache License 2.0
- */
-
-/**
- * [value.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [value.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace value.parser
  * @version 2.0.0

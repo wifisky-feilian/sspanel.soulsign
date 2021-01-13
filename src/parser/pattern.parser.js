@@ -1,5 +1,5 @@
 /**
- * [pattern.parser]{@link https://github.com/miiwu/sspanel.soulsign}
+ * [pattern.parser]{@link https://github.com/miiwu/domalet}
  *
  * @namespace pattern.parser
  * @version 2.0.0
