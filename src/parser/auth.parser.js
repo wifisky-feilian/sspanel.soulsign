@@ -17,7 +17,7 @@ const variable = {
     type: {
         anonymous: {
             name: "anonymous",
-            call(source, url) {
+            call() {
                 return { code: false, data: "this is anonymous auth" };
             },
         },
@@ -57,7 +57,7 @@ const variable = {
                     (save, tools) => {
                         if (save.result.code) tools.control.abort();
                     },
-                    (result, tools) => {
+                    (result) => {
                         result = Object.assign({ code: true }, result); // 默认为 true，失败
                         return result;
                     }

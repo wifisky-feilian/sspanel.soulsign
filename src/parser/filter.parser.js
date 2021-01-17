@@ -12,8 +12,6 @@
 
 import chain from "../utils/chain.utils.js"; // chain.utils
 
-import log from "../utils/log.utils.js"; // log.utils
-
 const variable = {
     input: null,
     chain: [], // 过滤链
@@ -53,7 +51,8 @@ function parser_filter(filter, error) {
                             message: message(packet, "doesn't return anything."), // 信息
                         }); // 储存异常
                     } else {
-                        if (!packet.result.hasOwnProperty("source")) packet.result.source = packet.source; // 无 source 属性，添加为当前 source
+                        if (!Object.prototype.hasOwnProperty.call(packet.result, "source"))
+                            packet.result.source = packet.source; // 无 source 属性，添加为当前 source
                         packet.tools.control.source.push(packet.result); // 储存资源
                     } // [{无返回值}, {有返回值}]
                 },
@@ -67,7 +66,7 @@ function parser_filter(filter, error) {
                     packet.result = { code: true };
                 },
                 succeed: (packet) => {
-                    if (packet.result.hasOwnProperty("code") && packet.result.code) {
+                    if (Object.prototype.hasOwnProperty.call(packet.result, "code") && packet.result.code) {
                         packet.tools.control.source.push({ source: error }); // 储存资源，指定错误时的值
                         packet.tools.control.exception.push({
                             errno: 2, // 错误

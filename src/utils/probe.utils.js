@@ -48,7 +48,7 @@ class probe {
         this.#chain.source.push(source);
     } //引用
 
-    exist(path, existing = (property) => {}) {
+    exist(path, existing = () => {}) {
         this.#stack.push({
             set set(value) {
                 this.parent[this.name] = value;
@@ -67,7 +67,7 @@ class probe {
         return bool;
     } // 判断是否存在，可嵌套
 
-    access(paths, callback = (property) => {}) {
+    access(paths, callback = () => {}) {
         if (!this.exist(paths, callback)) return undefined;
         else return this.#property.get;
     } // 获取属性

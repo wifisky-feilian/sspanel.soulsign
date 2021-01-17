@@ -21,6 +21,11 @@ const map = {
         ["object", "object.Object"],
         ["array", "object.Array"],
     ]),
+    constructor: new Map([
+        ["String", String],
+        ["Object", Object],
+        ["Array", Array],
+    ]),
 };
 
 /**
@@ -31,7 +36,13 @@ const map = {
  */
 
 const operate = {
-    table: function (table, operator = (item, tools) => {}, argument = []) {
+    table: function (
+        table,
+        operator = (item, tools) => {
+            item, tools;
+        },
+        argument = []
+    ) {
         const control = {
             status: {
                 index: 0, // 当前所在索引
@@ -100,7 +111,13 @@ const operate = {
 
         return { source: control.export.source, exception: control.export.exception };
     },
-    item: function (index, table, operator = function (item, index) {}) {
+    item: function (
+        index,
+        table,
+        operator = function (item, index) {
+            item, index;
+        }
+    ) {
         return operator(table[index], index);
     },
 };
@@ -113,6 +130,12 @@ const convert = {
 };
 
 const verify = {
+    /**
+     * Verify the typeof source, ONLY support object|array|string|number
+     * @param {any} source the source need to be verified
+     * @param {array|string} type the format string or it's array, eg. "object.Array"
+     * @param {function} callback call when verified, no matter true or false
+     */
     type: function (
         source,
         type,
@@ -125,8 +148,9 @@ const verify = {
 
             if (type[0] === typeof source) {
                 if (1 < type.length) {
-                    if (type[1].match("^[A-Za-z]+$")) return eval(`source instanceof ${type[1]}`);
-                    else return false; // [{第二个类型只包含字母，检查是否符合}, {第二个类型不只包含字母，不检查，为假}]
+                    let constructor = map.constructor.get(type[1]); // 转换第二个类型为 constructor
+                    if (constructor) return source instanceof constructor;
+                    else return false; // [{构造函数为真，检查是否符合}, {构造函数为真，不检查，为假}]
                 } // 如果存在第二个类型
 
                 return true;
@@ -149,13 +173,19 @@ const verify = {
 
         return callback(save);
     }, // 类型
-    property: function (object, path, farthest = (object, bool) => {}) {
+    property: function (
+        object,
+        path,
+        farthest = (object, bool) => {
+            object, bool;
+        }
+    ) {
         let property = null;
 
         path = convert.path(path); // 根据 "." 区分层级
 
         while (object) {
-            if (object.hasOwnProperty((property = path[0]))) {
+            if (Object.prototype.hasOwnProperty.call(object, (property = path[0]))) {
                 object = object[property];
                 path.shift();
             } else break;
@@ -166,7 +196,7 @@ const verify = {
         return !path.length;
     }, // 属性
     num: function (source, num = 0) {
-        if (source.hasOwnProperty(length)) {
+        if (Object.prototype.hasOwnProperty.call(source, length)) {
             return num > source.length;
         } // 如果有 "length" 属性
 

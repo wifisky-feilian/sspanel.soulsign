@@ -1,9 +1,0 @@
-/**
- * [auth.support]{@link https://github.com/miiwu/auth.domalet}
- *
- * @namespace auth.support
- * @version 0.0.1
- * @author miiwu [i.miiwu@outlook.com]
- * @copyright miiwu
- * @license Apache License 2.0
- */

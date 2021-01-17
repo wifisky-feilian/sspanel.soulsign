@@ -1,4 +1,4 @@
-import applet from "../../src/support/applet.support.js"; // applet.support
+import applet from "../../dist/support/applet.support.esm.js"; // applet.support
 
 const sspanel = {
     login(auth) {

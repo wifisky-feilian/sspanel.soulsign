@@ -27,7 +27,7 @@ function extract(auth, name) {
     let save = [];
 
     name.forEach((name) => {
-        if (!auth.hasOwnProperty(name))
+        if (!Object.prototype.hasOwnProperty.call(auth, name))
             throw `auth.support -> "${name}" is not included now, you must choose from: ${Object.keys(auth).join("|")}`;
 
         save.push({ name, ...auth[name] });

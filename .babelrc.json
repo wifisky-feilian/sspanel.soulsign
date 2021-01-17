@@ -25,5 +25,3 @@
         "@babel/plugin-proposal-private-methods"
     ]
 }
-
-// 78KB - npm i babel-loader @babel/core @babel/preset-env core-js @babel/runtime-corejs3 @babel/plugin-transform-runtime @babel/plugin-proposal-class-properties @babel/plugin-proposal-private-methods -D

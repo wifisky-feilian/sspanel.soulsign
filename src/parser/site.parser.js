@@ -39,13 +39,14 @@ function parser_site(object) {
         switch (typeof site) {
             case "string": // 字符串类型，即已提供类型
                 site = tools.table[tools.index] = { domain: site };
-                if (!site.hasOwnProperty("credential")) site.credential = [[{ type: "anonymous" }]];
+                if (!Object.prototype.hasOwnProperty.call(site, "credential"))
+                    site.credential = [[{ type: "anonymous" }]];
                 break;
             case "object": // 对象类型，即用户自定义类型
                 if (!verify.type(site.credential[0], "object.Array")) {
                     site.credential = [site.credential];
                 } // 不是标准多用户的，转换为多用户
-                if (site.hasOwnProperty("custom")) {
+                if (Object.prototype.hasOwnProperty.call(site, "custom")) {
                     site.custom = parser_command(site.custom); // 解析命令
                 } // 有自定义行为
                 break;

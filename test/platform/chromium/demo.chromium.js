@@ -1,8 +1,8 @@
-import domalet from "../../src/domalet.js"; // domalet
+import domalet from "../../../dist/domalet.esm.js"; // domalet
 
-import auth from "../auth/demo.auth.js"; // demo.auth
-import model from "../model/demo.model.js"; // demo.model
-import applet from "../applet/demo.applet.js"; // demo.applet
+import auth from "../../auth/demo.auth.js"; // demo.auth
+import model from "../../model/demo.model.js"; // demo.model
+import applet from "../../applet/demo.applet.js"; // demo.applet
 
 console.log("\n------------------------+{ demo.chromium start! }+------------------------\n");
 

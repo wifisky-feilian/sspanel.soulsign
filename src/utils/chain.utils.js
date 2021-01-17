@@ -20,21 +20,18 @@ class chain {
     #save = {}; // operate() 的结果
 
     #push(array) {
-        try {
-            array.forEach((item, key) => {
-                try {
-                    if (verify.type(this.#input.callback.key, "function")) {
-                        key = this.#input.callback.key(item, key);
-                    } // 回调，取得 key，便于 this.#depend
-                } catch (exception) {
-                    throw exception;
-                }
+        array.forEach((item, key) => {
+            try {
+                if (verify.type(this.#input.callback.key, "function")) {
+                    key = this.#input.callback.key(item, key);
+                } // 回调，取得 key，便于 this.#depend
+            } catch (exception) {
+                exception;
+                throw exception;
+            }
 
-                this.#array.push([key, item]);
-            }); // 存储，易于转换为 map 的形式
-        } catch (exception) {
-            throw exception;
-        }
+            this.#array.push([key, item]);
+        }); // 存储，易于转换为 map 的形式
 
         return array.length;
     } // 添加 array 到 this.#array
@@ -50,6 +47,11 @@ class chain {
     #depend(symbol = [this.#index], depend) {
         return new Map(
             operate.table(symbol, (symbol, tools) => {
+                function error() {
+                    source = depend; // 错误情况，包括首次的 -1
+                    filter = false;
+                }
+
                 let source = {},
                     filter = true;
 
@@ -62,12 +64,13 @@ class chain {
                     case "number": // 数字，即索引，为了可能的增删改查后的稳定，不建议外部使用
                         if (0 <= symbol) {
                             source = this.#array[symbol][1];
-                            break;
-                        } // 不小于零，正常索引
+                        } else {
+                            symbol = "depend";
+                            error();
+                        } // [{不小于零，正常索引}, {小于零，非正常索引}]
+                        break;
                     default:
-                        if (-1 === symbol) symbol = "depend";
-                        source = depend; // 错误情况，包括首次的 -1
-                        filter = false;
+                        error();
                         break;
                 }
 
@@ -121,13 +124,13 @@ class chain {
     apply(argument = []) {
         this.#array.length = this.#count.persistent; // 仅保留持久化的
 
-        if (this.#input.dependent.hasOwnProperty("callback")) {
+        if (Object.prototype.hasOwnProperty.call(this.#input.dependent, "callback")) {
             this.#count.dependent = this.#push(
                 this.#input.dependent.callback(this.#input.dependent.source, ...argument) // 回调，获取
             ); // 存入链式数组
         } // 提供了获取的回调函数
 
-        if (this.#input.hasOwnProperty("command")) {
+        if (Object.prototype.hasOwnProperty.call(this.#input, "command")) {
             console.debug("Not ready yet.");
         } // 有指令
     } // 根据 this.#input.config 配置 this.#list 和  this.#count
@@ -170,7 +173,7 @@ class chain {
 
     save() {
         if (verify.type(this.#input.callback.save, "function")) {
-            this.#save.save.forEach((item, index, array) => {
+            this.#save.save.forEach(() => {
                 this.#input.callback.save(...arguments);
             });
         } // 回调，过滤 this.#save

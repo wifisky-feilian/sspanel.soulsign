@@ -18,7 +18,7 @@ function timestamp() {
     })}.${variable.getMilliseconds()}`;
 }
 
-function ready(time) {
+function ready() {
     return true;
 }
 

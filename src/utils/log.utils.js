@@ -49,6 +49,7 @@ const variable = {
         ) {
             variable.pool[zone].forEach((element) => {
                 if (verify.type(hook, "function")) element = hook(element); // 如果 hook 是函数
+                element; // eslint error: no-unused-vars
             });
 
             return callback(variable.pool[zone]);

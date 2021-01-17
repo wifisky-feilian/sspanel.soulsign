@@ -14,14 +14,11 @@
 
 "use strict";
 
-import share from "../utils/share.utils.js"; // share.utils
 import log from "../utils/log.utils.js"; // log.utils
-import time from "../utils/time.utils.js"; // time.utils
 import probe from "../utils/probe.utils.js"; // probe.utils
 
 import model from "./model.parser.js"; // model.parser
 import platform from "./platform.parser.js"; // platform.parser
-import auth from "./auth.parser.js"; // auth.parser
 import applet from "./applet.parser.js"; // applet.parser
 import site from "./site.parser.js"; // domain.parser
 
@@ -30,19 +27,19 @@ const variable = {
     probe: null,
     method: {
         parser(probe, object) {
-            probe.access(["platform"], (property) => {
+            probe.access(["platform"], () => {
                 platform.parser(object);
             });
-            probe.access(["site"], (property) => {
+            probe.access(["site"], () => {
                 site.parser(object);
             });
-            probe.access(["applet"], (property) => {
+            probe.access(["applet"], () => {
                 applet.parser(object);
             });
 
             log.debug.record("line.parser.control.access() complete.");
         },
-        operate(argument, probe, object) {
+        operate(argument, probe) {
             probe.access(["site"], (property) => {
                 applet.operate(argument.section[0], argument.section[1], property.get); // 运行 applet
             }); // 获取 site

@@ -36,7 +36,7 @@ function extract(
         return applet;
     }
 ) {
-    if (!applet.hasOwnProperty(name))
+    if (!Object.prototype.hasOwnProperty.call(applet, name))
         throw `applet.support -> "${name}" is not included now, you must choose from: ${Object.keys(applet).join("|")}`;
 
     return callback(applet[name]);

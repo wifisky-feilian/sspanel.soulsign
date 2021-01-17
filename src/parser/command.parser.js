@@ -10,9 +10,8 @@
 
 "use strict";
 
-import { operate } from "../utils/share.utils.js"; // share.utils
-
 function parser_command(command = []) {
+    command;
     console.debug("command parser not ready yet.");
 
     /*

@@ -1,4 +1,4 @@
-import support from "../../src/support/auth.support.js"; // auth.support
+import support from "../../dist/support/auth.support.esm.js"; // auth.support
 
 const variable = {
     password: {

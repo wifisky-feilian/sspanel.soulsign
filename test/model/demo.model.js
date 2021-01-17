@@ -1,4 +1,4 @@
-import model from "../../src/support/model.support.js"; // model.support
+import model from "../../dist/support/model.support.esm.js"; // model.support
 
 const group = [
     [

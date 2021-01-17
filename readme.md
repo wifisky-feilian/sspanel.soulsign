@@ -8,10 +8,10 @@ domain, applet, ***m<u>ain</u> = a<u>pp</u>***, then, **dom**<sup>ain</sup>**a**
 
 ## 愿景
 
-- [ ] 使用 `webpack` 打包成单文件
-  
-  - `umd`：如何使用？哎呀，哈哈哈，还没搞懂
-  
+- [x] 使用 `rollup` 打包成单文件
+
+  - [ ] 已知问题：`(!) Module level directives cause errors when bundled, 'use strick' was ignored.`
+
 - [ ] 检查或过滤 `line.parser` 时输入的 `value`，抽象为 `filter/过滤器`
 
 - [ ] 支持多网站多账户，抽象为 `site/网站`
@@ -22,6 +22,7 @@ domain, applet, ***m<u>ain</u> = a<u>pp</u>***, then, **dom**<sup>ain</sup>**a**
   - 不同网站之间可异步处理？
   
 - [ ] 可以使用 `dom` 匹配和纯 `regexp/正则表达式` 匹配信息，抽象为 `source/资源`
+  
   - `dom`：`jsdom` 或其他取代 `DOMParser`？
   
 - [ ] 可以使用 `taken`、`password` 等的认证，抽象为 `auth/认证`

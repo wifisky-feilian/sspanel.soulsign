@@ -14,8 +14,6 @@ import share from "../utils/share.utils.js"; // share.utils
 import log from "../utils/log.utils.js"; // log.utils
 import chain from "../utils/chain.utils.js"; // chain.utils
 
-import $auth from "../parser/auth.parser.js"; // auth.parser
-
 const variable = {
     assert: ["array"],
     chain: null,
@@ -118,13 +116,9 @@ const variable = {
 };
 
 function assert_applet(applet) {
-    function fail(index) {
-        return [""][index];
-    }
-
-    return share.assert(applet, variable.assert, "applet", (verify) => {
+    return share.assert(applet, variable.assert, "applet", () => {
         share.operate.table(applet, (applet, tools) => {
-            if (!applet.hasOwnProperty("info")) {
+            if (!Object.prototype.hasOwnProperty.call(applet, "info")) {
                 tools.control.exception.push();
             }
         });

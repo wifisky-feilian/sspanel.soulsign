@@ -57,7 +57,7 @@ function parser_model(
                 variable.nest.branch.push(branch);
                 branch = variable.nest.branch.slice(-1)[0]; // 记录当前分支的对应对象
             },
-            pop: function (name, index) {
+            pop: function () {
                 // console.debug("pop: %o", { name, index });
 
                 variable.nest.path.pop();
@@ -71,7 +71,7 @@ function parser_model(
             branch: function (property) {
                 // console.debug("branch: %o", { property });
 
-                if (!branch.hasOwnProperty(property)) branch[property] = {}; // 如果没当前属性，创建空对象
+                if (!Object.prototype.hasOwnProperty.call(branch, property)) branch[property] = {}; // 如果没当前属性，创建空对象
 
                 branch = branch[property]; // 转换为当前属性
                 variable.count.branch++; // branch 计数自增
